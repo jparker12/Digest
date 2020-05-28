@@ -11,7 +11,7 @@ interface MealDao {
     fun getAllMealsWithIngredients(): LiveData<List<MealWithIngredients>>
 
     @Insert
-    suspend fun insertMeal(meals: MealEntity): Long
+    suspend fun insertMeal(meal: MealEntity): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateMeal(meal: MealEntity)
