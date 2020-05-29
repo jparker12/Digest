@@ -10,7 +10,9 @@ data class MealIngredientEntity(
     @ColumnInfo(name = "meal_id")
     val mealId: Int,
     @ColumnInfo(name = "ingredient_id")
-    val ingredientId: Int
+    val ingredientId: Int,
+    @ColumnInfo(name = "units")
+    val units: Int?
 )
 
 data class MealWithIngredients(

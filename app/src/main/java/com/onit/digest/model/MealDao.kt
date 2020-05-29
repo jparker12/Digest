@@ -7,7 +7,7 @@ import androidx.room.*
 interface MealDao {
 
     @Transaction
-    @Query("SELECT * FROM meal")
+    @Query(value = "SELECT * FROM meal")
     fun getAllMealsWithIngredients(): LiveData<List<MealWithIngredients>>
 
     @Insert
@@ -15,4 +15,7 @@ interface MealDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateMeal(meal: MealEntity)
+
+    @Query(value = "DELETE FROM meal WHERE id = :mealId")
+    suspend fun deleteMeal(mealId: Int)
 }
