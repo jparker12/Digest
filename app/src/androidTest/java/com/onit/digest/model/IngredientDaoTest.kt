@@ -5,7 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.onit.digest.buildDigestDatabase
-import com.onit.digest.prepopulateDatabase
+import com.onit.digest.executeSql
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.not
@@ -32,6 +32,15 @@ class IngredientDaoTest {
         ingredientDao = digestDb.ingredientDao()
     }
 
+    private fun prepopulateDatabase() {
+        executeSql(
+            digestDb,
+            "INSERT INTO meal (id,name) values (1,'Pasta Bolognese'), (2,'Thai Curry')",
+            "INSERT INTO ingredient (id,name) values (1,'Pasta'), (2,'Bolognese Sauce'), (3,'Rice'), (4,'Green Thai Curry Sauce')",
+            "INSERT INTO meal_ingredient (meal_id,ingredient_id) values (1,1),(1,2),(2,3),(2,4)"
+        )
+    }
+
     @After
     fun closeDb() {
         digestDb.close()
@@ -39,7 +48,7 @@ class IngredientDaoTest {
 
     @Test
     fun getAllIngredients() {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
         ingredientDao.getAllIngredients().observeForever {
             assertEquals(4, it.size)
             assertEquals(IngredientEntity(1, "Pasta"), it[0])
@@ -60,13 +69,13 @@ class IngredientDaoTest {
 
     @Test(expected = SQLiteConstraintException::class)
     fun insertIngredientNameUnique() = runBlockingTest {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
         ingredientDao.insertIngredients(IngredientEntity(name = "Pasta"))
     }
 
     @Test
     fun updateIngredient() = runBlockingTest {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
         val ingredient = IngredientEntity(1, "Spaghetti")
         ingredientDao.updateIngredients(ingredient)
         ingredientDao.getAllIngredients().observeForever {
@@ -76,7 +85,7 @@ class IngredientDaoTest {
 
     @Test
     fun deleteIngredient() = runBlockingTest {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
         val ingredient = IngredientEntity(1, "Pasta")
         ingredientDao.deleteIngredients(ingredient.id)
         ingredientDao.getAllIngredients().observeForever {

@@ -8,12 +8,12 @@ fun buildDigestDatabase(context: Context): DigestDatabase {
     return Room.inMemoryDatabaseBuilder(context, DigestDatabase::class.java).build()
 }
 
-fun prepopulateDatabase(digestDb: DigestDatabase) {
+fun executeSql(digestDb: DigestDatabase, vararg statements: String) {
     val db = digestDb.openHelper.writableDatabase
     db.beginTransaction()
-    db.execSQL("INSERT INTO meal (id,name) values (1,'Pasta Bolognese'), (2,'Thai Curry')")
-    db.execSQL("INSERT INTO ingredient (id,name) values (1,'Pasta'), (2,'Bolognese Sauce'), (3,'Rice'), (4,'Green Thai Curry Sauce')")
-    db.execSQL("INSERT INTO meal_ingredient (meal_id,ingredient_id) values (1,1),(1,2),(2,3),(2,4)")
+    for (statement in statements) {
+        db.execSQL(statement)
+    }
     db.setTransactionSuccessful()
     db.endTransaction()
 }

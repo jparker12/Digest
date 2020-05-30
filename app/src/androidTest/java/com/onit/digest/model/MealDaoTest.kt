@@ -5,7 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.onit.digest.buildDigestDatabase
-import com.onit.digest.prepopulateDatabase
+import com.onit.digest.executeSql
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.*
@@ -29,6 +29,15 @@ class MealDaoTest {
         mealDao = digestDb.mealDao()
     }
 
+    private fun prepopulateDatabase() {
+        executeSql(
+            digestDb,
+            "INSERT INTO meal (id,name) values (1,'Pasta Bolognese'), (2,'Thai Curry')",
+            "INSERT INTO ingredient (id,name) values (1,'Pasta'), (2,'Bolognese Sauce'), (3,'Rice'), (4,'Green Thai Curry Sauce')",
+            "INSERT INTO meal_ingredient (meal_id,ingredient_id) values (1,1),(1,2),(2,3),(2,4)"
+        )
+    }
+
     @After
     fun closeDb() {
         digestDb.close()
@@ -36,7 +45,7 @@ class MealDaoTest {
 
     @Test
     fun getAllMealsWithIngredients() {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
         mealDao.getAllMealsWithIngredients().observeForever {
             assertEquals(2, it.size)
             val mealWithIngredients = it[0]
@@ -60,13 +69,13 @@ class MealDaoTest {
 
     @Test(expected = SQLiteConstraintException::class)
     fun insertMealNameUnique() = runBlockingTest {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
         mealDao.insertMeal(MealEntity(name = "Pasta Bolognese"))
     }
 
     @Test
     fun updateMealReplace() = runBlockingTest {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
 
         val updatedMeal = MealEntity(2, "Green Thai Curry")
         mealDao.updateMeal(updatedMeal)
@@ -77,7 +86,7 @@ class MealDaoTest {
 
     @Test
     fun deleteMeal() = runBlockingTest {
-        prepopulateDatabase(digestDb)
+        prepopulateDatabase()
 
         mealDao.deleteMeal(1)
         mealDao.getAllMealsWithIngredients().observeForever {
