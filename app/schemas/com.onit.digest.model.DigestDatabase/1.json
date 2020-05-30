@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "29cbf166b0aec654255eca1542284dbf",
+    "identityHash": "9eab1b641f295bd899c22c66b5ee4fe9",
     "entities": [
       {
         "tableName": "ingredient",
@@ -27,7 +27,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_ingredient_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_ingredient_name` ON `${TABLE_NAME}` (`name`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -102,7 +111,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '29cbf166b0aec654255eca1542284dbf')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9eab1b641f295bd899c22c66b5ee4fe9')"
     ]
   }
 }

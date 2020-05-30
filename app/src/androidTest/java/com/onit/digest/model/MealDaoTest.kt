@@ -58,18 +58,10 @@ class MealDaoTest {
         }
     }
 
-    @Test
+    @Test(expected = SQLiteConstraintException::class)
     fun insertMealNameUnique() = runBlockingTest {
-        val meal = MealEntity(name = "Pasta Bolognese")
-        mealDao.insertMeal(meal)
-        var e: SQLiteConstraintException? = null
-        try {
-            mealDao.insertMeal(meal)
-        } catch (ex: SQLiteConstraintException) {
-            e = ex
-        } finally {
-            assertNotNull(e)
-        }
+        prepopulateDatabase(digestDb)
+        mealDao.insertMeal(MealEntity(name = "Pasta Bolognese"))
     }
 
     @Test

@@ -12,6 +12,7 @@ import androidx.room.RoomDatabase
 abstract class DigestDatabase: RoomDatabase() {
 
     abstract fun mealDao(): MealDao
+    abstract fun ingredientDao(): IngredientDao
 
     companion object {
         @Volatile
