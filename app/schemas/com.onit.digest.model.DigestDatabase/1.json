@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9eab1b641f295bd899c22c66b5ee4fe9",
+    "identityHash": "c19c8422cb312ba92d53a8a4e5080270",
     "entities": [
       {
         "tableName": "ingredient",
@@ -76,7 +76,7 @@
       },
       {
         "tableName": "meal_ingredient",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`meal_id` INTEGER NOT NULL, `ingredient_id` INTEGER NOT NULL, `units` INTEGER, PRIMARY KEY(`meal_id`, `ingredient_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`meal_id` INTEGER NOT NULL, `ingredient_id` INTEGER NOT NULL, `units` INTEGER, PRIMARY KEY(`meal_id`, `ingredient_id`), FOREIGN KEY(`meal_id`) REFERENCES `meal`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ingredient_id`) REFERENCES `ingredient`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "mealId",
@@ -104,14 +104,46 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "index_meal_ingredient_ingredient_id",
+            "unique": false,
+            "columnNames": [
+              "ingredient_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_meal_ingredient_ingredient_id` ON `${TABLE_NAME}` (`ingredient_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "meal",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "meal_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ingredient",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ingredient_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9eab1b641f295bd899c22c66b5ee4fe9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c19c8422cb312ba92d53a8a4e5080270')"
     ]
   }
 }

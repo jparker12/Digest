@@ -8,12 +8,12 @@ interface MealDao {
 
     @Transaction
     @Query(value = "SELECT * FROM meal")
-    fun getAllMealsWithIngredients(): LiveData<List<MealWithIngredients>>
+    fun getAllMeals(): LiveData<List<MealEntity>>
 
     @Insert
     suspend fun insertMeal(meal: MealEntity): Long
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     suspend fun updateMeal(meal: MealEntity)
 
     @Query(value = "DELETE FROM meal WHERE id = :mealId")

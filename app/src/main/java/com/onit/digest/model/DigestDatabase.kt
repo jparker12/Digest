@@ -13,6 +13,7 @@ abstract class DigestDatabase: RoomDatabase() {
 
     abstract fun mealDao(): MealDao
     abstract fun ingredientDao(): IngredientDao
+    abstract fun mealIngredientDao(): MealIngredientDao
 
     companion object {
         @Volatile

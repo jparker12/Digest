@@ -12,7 +12,7 @@ interface IngredientDao {
     @Insert
     suspend fun insertIngredients(vararg ingredients: IngredientEntity): List<Long>
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     suspend fun updateIngredients(vararg ingredients: IngredientEntity)
 
     @Query(value = "DELETE FROM ingredient WHERE id IN (:ingredientIds)")

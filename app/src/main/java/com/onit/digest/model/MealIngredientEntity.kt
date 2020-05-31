@@ -4,28 +4,27 @@ import androidx.room.*
 
 @Entity(
     tableName = "meal_ingredient",
-    primaryKeys = ["meal_id", "ingredient_id"]
+    primaryKeys = ["meal_id", "ingredient_id"],
+    foreignKeys = [
+        ForeignKey(entity = MealEntity::class, parentColumns = ["id"], childColumns = ["meal_id"], onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = IngredientEntity::class, parentColumns = ["id"], childColumns = ["ingredient_id"], onDelete = ForeignKey.CASCADE)
+    ]
 )
 data class MealIngredientEntity(
     @ColumnInfo(name = "meal_id")
     val mealId: Int,
-    @ColumnInfo(name = "ingredient_id")
+    @ColumnInfo(name = "ingredient_id", index = true)
     val ingredientId: Int,
     @ColumnInfo(name = "units")
-    val units: Int?
+    val units: Int? = null
+)
+
+data class IngredientWithExtra(
+    val ingredient: IngredientEntity,
+    val units: Int? = null
 )
 
 data class MealWithIngredients(
-    @Embedded val meal: MealEntity,
-    @Relation(
-        entity = IngredientEntity::class,
-        parentColumn = "id",
-        entityColumn = "id",
-        associateBy = Junction(
-            MealIngredientEntity::class,
-            parentColumn = "meal_id",
-            entityColumn = "ingredient_id"
-        )
-    )
-    val ingredients: List<IngredientEntity>
+    val meal: MealEntity,
+    val ingredients: List<IngredientWithExtra>
 )
