@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion 29
@@ -64,6 +65,11 @@ dependencies {
 
     // Material design
     implementation "com.google.android.material:material:$rootProject.materialVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerVersion"
+
+    //Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
 
     // Testing
     testImplementation "junit:junit:$rootProject.junitVersion"
