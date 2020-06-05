@@ -5,14 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.model.MealWithIngredients
 
 class MealsAdapter :
-    ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(MealsDiffCallback()) {
+    ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(DiffCallback()) {
 
-    class MealsDiffCallback: DiffUtil.ItemCallback<MealWithIngredients>() {
+    class DiffCallback: DiffUtil.ItemCallback<MealWithIngredients>() {
         override fun areItemsTheSame(
             oldItem: MealWithIngredients,
             newItem: MealWithIngredients
@@ -25,7 +26,8 @@ class MealsAdapter :
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvTitle: TextView = itemView.findViewById(R.id.tv_meal)
+        val tvName: TextView = itemView.findViewById(R.id.tv_meal)
+        val rvIngredients: RecyclerView = itemView.findViewById(R.id.rv_ingredients)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,6 +36,11 @@ class MealsAdapter :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tvTitle.text = getItem(position).meal.name
+        val mealWithIngredients = getItem(position)
+        holder.tvName.text = mealWithIngredients.meal.name
+        holder.rvIngredients.layoutManager = LinearLayoutManager(holder.rvIngredients.context)
+        val adapter = ChildIngredientAdapter()
+        holder.rvIngredients.adapter = adapter
+        adapter.submitList(mealWithIngredients.ingredients)
     }
 }

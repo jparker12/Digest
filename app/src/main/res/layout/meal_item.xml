@@ -10,21 +10,73 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_meal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Pasta Bolognese" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_expandable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_meal">
+
+            <TextView
+                android:id="@+id/tv_ingredients_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/ingredients"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_ingredients"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_ingredients_header"
+                tools:listitem="@layout/child_ingredient_item" />
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:text="Edit"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:icon="@drawable/ic_edit"
+                app:iconSize="14dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_ingredients"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
