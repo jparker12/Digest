@@ -60,7 +60,12 @@ class MealsAdapter(expandedMealIds: Set<Int>?) :
         val adapter = ChildIngredientAdapter()
         holder.rvIngredients.adapter = adapter
         adapter.submitList(mealWithIngredients.ingredients)
-        holder.layoutExpandable.visibility =
-            if (expandedMealIds.contains(mealWithIngredients.meal.id)) View.VISIBLE else View.GONE
+        if (expandedMealIds.contains(mealWithIngredients.meal.id)) {
+            holder.layoutExpandable.visibility = View.VISIBLE
+            holder.tvName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up, 0)
+        } else {
+            holder.layoutExpandable.visibility = View.GONE
+            holder.tvName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down, 0)
+        }
     }
 }

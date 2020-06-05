@@ -8,8 +8,12 @@
 
     <TextView
         android:id="@+id/tv_ingredient"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dotted_separator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Bell Pepper" />
@@ -18,14 +22,14 @@
         android:id="@+id/dotted_separator"
         android:layout_width="0dp"
         android:layout_height="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/dotted_line"
         android:layerType="software"
         android:padding="3dp"
         android:scaleY="1.2"
         android:translationY="-2dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_ingredient"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ingredient"
         app:layout_constraintEnd_toStartOf="@+id/tv_units"
         app:layout_constraintStart_toEndOf="@+id/tv_ingredient" />
 
@@ -33,8 +37,10 @@
         android:id="@+id/tv_units"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/dotted_separator"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dotted_separator"
         tools:text="2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
