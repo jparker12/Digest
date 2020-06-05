@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
     android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,32 +16,37 @@
             android:id="@+id/tv_meal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_constraintBottom_toTopOf="@+id/layout_expandable"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginBottom="12dp"
             tools:text="Pasta Bolognese" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_expandable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_meal">
+            app:layout_constraintTop_toBottomOf="@+id/tv_meal"
+            tools:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_ingredients_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/ingredients"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,8 +55,8 @@
                 android:id="@+id/rv_ingredients"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -59,22 +64,23 @@
                 tools:listitem="@layout/child_ingredient_item" />
 
             <Button
-                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                 android:id="@+id/button"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:text="Edit"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/edit"
                 app:icon="@drawable/ic_edit"
                 app:iconSize="14dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_ingredients"/>
+                app:layout_constraintTop_toBottomOf="@+id/rv_ingredients"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

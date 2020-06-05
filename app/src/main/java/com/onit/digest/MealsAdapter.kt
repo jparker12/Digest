@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -26,7 +27,9 @@ class MealsAdapter :
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val root: View = itemView
         val tvName: TextView = itemView.findViewById(R.id.tv_meal)
+        val layoutExpandable: ConstraintLayout = itemView.findViewById(R.id.layout_expandable)
         val rvIngredients: RecyclerView = itemView.findViewById(R.id.rv_ingredients)
     }
 
@@ -42,5 +45,10 @@ class MealsAdapter :
         val adapter = ChildIngredientAdapter()
         holder.rvIngredients.adapter = adapter
         adapter.submitList(mealWithIngredients.ingredients)
+        holder.root.setOnClickListener {
+            if (holder.layoutExpandable.visibility == View.GONE) {
+                holder.layoutExpandable.visibility = View.VISIBLE
+            }
+        }
     }
 }
