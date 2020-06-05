@@ -11,10 +11,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.model.MealWithIngredients
 
-class MealsAdapter :
+class MealsAdapter(expandedMealIds: Set<Int>?) :
     ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(DiffCallback()) {
 
-    class DiffCallback: DiffUtil.ItemCallback<MealWithIngredients>() {
+    val expandedMealIds = mutableSetOf<Int>()
+
+    init {
+        expandedMealIds?.let { this.expandedMealIds.addAll(it) }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<MealWithIngredients>() {
         override fun areItemsTheSame(
             oldItem: MealWithIngredients,
             newItem: MealWithIngredients
@@ -26,15 +32,24 @@ class MealsAdapter :
         ): Boolean = oldItem == newItem
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val root: View = itemView
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tv_meal)
         val layoutExpandable: ConstraintLayout = itemView.findViewById(R.id.layout_expandable)
         val rvIngredients: RecyclerView = itemView.findViewById(R.id.rv_ingredients)
+
+        init {
+            tvName.setOnClickListener {
+                val position = adapterPosition
+                val mealId = getItem(position).meal.id
+                if (!expandedMealIds.add(mealId)) expandedMealIds.remove(mealId)
+                notifyItemChanged(position)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.meal_item, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.meal_item, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -45,10 +60,7 @@ class MealsAdapter :
         val adapter = ChildIngredientAdapter()
         holder.rvIngredients.adapter = adapter
         adapter.submitList(mealWithIngredients.ingredients)
-        holder.root.setOnClickListener {
-            if (holder.layoutExpandable.visibility == View.GONE) {
-                holder.layoutExpandable.visibility = View.VISIBLE
-            }
-        }
+        holder.layoutExpandable.visibility =
+            if (expandedMealIds.contains(mealWithIngredients.meal.id)) View.VISIBLE else View.GONE
     }
 }

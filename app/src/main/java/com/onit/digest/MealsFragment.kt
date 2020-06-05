@@ -17,6 +17,9 @@ import com.onit.digest.viewmodel.MealsViewModel
 class MealsFragment : Fragment() {
 
     private lateinit var viewModel: MealsViewModel
+    private lateinit var mealsAdapter: MealsAdapter
+
+    private val expandedMealIdsKey = "MealsFragment.expandedMealIds.KEY"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,16 +33,24 @@ class MealsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val recyclerView: RecyclerView = requireView().findViewById(R.id.rv_meals)
-        val adapter = MealsAdapter()
+        // attempt to get expandedMealIds Set if it was saved
+        val expandedMealIds = savedInstanceState?.getIntArray(expandedMealIdsKey)?.toSet()
+        mealsAdapter = MealsAdapter(expandedMealIds)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
+        recyclerView.adapter = mealsAdapter
 
         viewModel = ViewModelProvider(
             requireActivity(),
             MealsViewModel.Factory(requireActivity().application)
         ).get(MealsViewModel::class.java)
         viewModel.allMeals.observe(viewLifecycleOwner, Observer { allMeals ->
-            adapter.submitList(allMeals)
+            mealsAdapter.submitList(allMeals)
         })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save the state of expandedMealIds Set in MealsAdapter
+        outState.putIntArray(expandedMealIdsKey, mealsAdapter.expandedMealIds.toIntArray())
     }
 }
