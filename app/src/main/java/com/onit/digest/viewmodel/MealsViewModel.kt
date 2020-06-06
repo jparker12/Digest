@@ -1,11 +1,10 @@
 package com.onit.digest.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.onit.digest.model.DatabaseHelper
 import com.onit.digest.model.MealRepository
+import com.onit.digest.model.MealWithIngredients
 
 class MealsViewModel(
     application: Application,
@@ -23,5 +22,21 @@ class MealsViewModel(
     }
 
     val allMeals = repository.getAllMealsWithIngredients()
+
+    // Set of meal Ids that have been expanded to show ingredients in the recycler view
+    private val _expandedMealIds: MutableLiveData<Set<Int>> = MutableLiveData(emptySet())
+    val expandedMealIds: LiveData<Set<Int>>
+        get() = _expandedMealIds
+
+    /**
+     * To be called when a user toggles expand/collapse on a meal item in the recycler view
+     */
+    fun onMealItemExpandToggle(mealWithIngredients: MealWithIngredients) {
+        val currentSet = expandedMealIds.value?.toMutableSet() ?: mutableSetOf()
+        if (!currentSet.add(mealWithIngredients.meal.id)) {
+            currentSet.remove(mealWithIngredients.meal.id)
+        }
+        _expandedMealIds.value = currentSet
+    }
 
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.viewmodel.MealsViewModel
@@ -19,8 +20,6 @@ class MealsFragment : Fragment() {
     private lateinit var viewModel: MealsViewModel
     private lateinit var mealsAdapter: MealsAdapter
 
-    private val expandedMealIdsKey = "MealsFragment.expandedMealIds.KEY"
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,25 +31,31 @@ class MealsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val recyclerView: RecyclerView = requireView().findViewById(R.id.rv_meals)
-        // attempt to get expandedMealIds Set if it was saved
-        val expandedMealIds = savedInstanceState?.getIntArray(expandedMealIdsKey)?.toSet()
-        mealsAdapter = MealsAdapter(expandedMealIds)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = mealsAdapter
-
         viewModel = ViewModelProvider(
             requireActivity(),
             MealsViewModel.Factory(requireActivity().application)
         ).get(MealsViewModel::class.java)
+
+        val recyclerView: RecyclerView = requireView().findViewById(R.id.rv_meals)
+        mealsAdapter = MealsAdapter(
+            { mealWithIngredients ->
+                viewModel.onMealItemExpandToggle(mealWithIngredients)
+            },
+            { mealWithIngredients ->
+                val action = MealsFragmentDirections.editMealAction()
+                findNavController().navigate(action)
+            }
+        )
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = mealsAdapter
+
+        // Observe changes in MealWithIngredients list
         viewModel.allMeals.observe(viewLifecycleOwner, Observer { allMeals ->
             mealsAdapter.submitList(allMeals)
         })
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        // Save the state of expandedMealIds Set in MealsAdapter
-        outState.putIntArray(expandedMealIdsKey, mealsAdapter.expandedMealIds.toIntArray())
+        // Observe changes in expanded meal items to show ingredients in the recycler view
+        viewModel.expandedMealIds.observe(viewLifecycleOwner, Observer { expandedMealIds ->
+            mealsAdapter.setExpandedMealIds(expandedMealIds)
+        })
     }
 }

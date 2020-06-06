@@ -3,6 +3,7 @@ package com.onit.digest
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
@@ -11,13 +12,30 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.model.MealWithIngredients
 
-class MealsAdapter(expandedMealIds: Set<Int>?) :
+class MealsAdapter(
+    private val onMealExpandToggle: (mealWithIngredients: MealWithIngredients) -> Unit,
+    private val onEditMealClick: (mealWithIngredients: MealWithIngredients) -> Unit
+) :
     ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(DiffCallback()) {
 
-    val expandedMealIds = mutableSetOf<Int>()
+    private var expandedMealIds = emptySet<Int>()
+    // Keep track of the last item that was expanded/collapsed so it can be animated when
+    // setExpandedMealIds() is called
+    private var lastExpandedPosition: Int? = null
 
-    init {
-        expandedMealIds?.let { this.expandedMealIds.addAll(it) }
+    /**
+     * Supply a set of MealIds that have been expanded to show ingredients in the recycler view
+     */
+    fun setExpandedMealIds(expandedMealIds: Set<Int>) {
+        if (this.expandedMealIds != expandedMealIds) {
+            this.expandedMealIds = expandedMealIds
+            val lastExpandedPosition = this.lastExpandedPosition
+            if (lastExpandedPosition != null) {
+                notifyItemChanged(lastExpandedPosition)
+            } else {
+                notifyDataSetChanged()
+            }
+        }
     }
 
     class DiffCallback : DiffUtil.ItemCallback<MealWithIngredients>() {
@@ -40,9 +58,12 @@ class MealsAdapter(expandedMealIds: Set<Int>?) :
         init {
             tvName.setOnClickListener {
                 val position = adapterPosition
-                val mealId = getItem(position).meal.id
-                if (!expandedMealIds.add(mealId)) expandedMealIds.remove(mealId)
-                notifyItemChanged(position)
+                lastExpandedPosition = position
+                onMealExpandToggle(getItem(position))
+            }
+            val bnEditMeal: Button = itemView.findViewById(R.id.bn_edit_meal)
+            bnEditMeal.setOnClickListener {
+                onEditMealClick(getItem(adapterPosition))
             }
         }
     }
@@ -62,10 +83,20 @@ class MealsAdapter(expandedMealIds: Set<Int>?) :
         adapter.submitList(mealWithIngredients.ingredients)
         if (expandedMealIds.contains(mealWithIngredients.meal.id)) {
             holder.layoutExpandable.visibility = View.VISIBLE
-            holder.tvName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up, 0)
+            holder.tvName.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_arrow_up,
+                0
+            )
         } else {
             holder.layoutExpandable.visibility = View.GONE
-            holder.tvName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down, 0)
+            holder.tvName.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_arrow_down,
+                0
+            )
         }
     }
 }
