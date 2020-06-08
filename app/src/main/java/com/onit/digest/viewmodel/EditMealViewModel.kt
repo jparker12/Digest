@@ -28,6 +28,8 @@ class EditMealViewModel(
         var quantity: Int? = null
     )
 
+    val actionBarTitle = if (selectedMeal == null) "Add Meal" else "Edit Meal"
+
     private val _mealName: MutableLiveData<String> = MutableLiveData(selectedMeal?.meal?.name ?: "")
     val mealName: LiveData<String>
         get() = _mealName
@@ -36,6 +38,9 @@ class EditMealViewModel(
         _mealName.value = mealName
     }
 
-    val editIngredients = mutableListOf<EditIngredientWithExtra>()
+    val editIngredients =
+        selectedMeal?.ingredients?.map {
+            EditIngredientWithExtra(it.ingredient.name, it.units)
+        }?.toMutableList() ?: mutableListOf()
 
 }

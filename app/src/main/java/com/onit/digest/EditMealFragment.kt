@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -41,6 +42,8 @@ class EditMealFragment : Fragment() {
         ).get(EditMealViewModel::class.java)
 
         val view = requireView()
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = viewModel.actionBarTitle
 
         val etMealName: EditText = view.findViewById(R.id.et_meal_name)
         etMealName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
