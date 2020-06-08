@@ -1,6 +1,8 @@
 package com.onit.digest.model
 
+import android.os.Parcelable
 import androidx.room.*
+import kotlinx.android.parcel.Parcelize
 
 @Entity(
     tableName = "meal_ingredient",
@@ -19,12 +21,14 @@ data class MealIngredientEntity(
     val units: Int? = null
 )
 
+@Parcelize
 data class IngredientWithExtra(
     val ingredient: IngredientEntity,
     val units: Int? = null
-)
+) : Parcelable
 
+@Parcelize
 data class MealWithIngredients(
     val meal: MealEntity,
     val ingredients: List<IngredientWithExtra>
-)
+) : Parcelable

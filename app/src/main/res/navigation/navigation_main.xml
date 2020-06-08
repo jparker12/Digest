@@ -9,5 +9,26 @@
         android:id="@+id/meals_dest"
         android:name="com.onit.digest.MealsFragment"
         android:label="@string/meals"
-        tools:layout="@layout/fragment_meals" />
+        tools:layout="@layout/fragment_meals">
+        <action
+            android:id="@+id/edit_meal_action"
+            app:destination="@id/editMealFragment">
+            <argument
+                android:name="selectedMeal"
+                android:defaultValue="@null"
+                app:argType="com.onit.digest.model.MealWithIngredients"
+                app:nullable="true" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editMealFragment"
+        android:name="com.onit.digest.EditMealFragment">
+
+        <argument
+            android:name="selectedMeal"
+            android:defaultValue="@null"
+            app:argType="com.onit.digest.model.MealWithIngredients"
+            app:nullable="true" />
+    </fragment>
 </navigation>

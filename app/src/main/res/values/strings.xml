@@ -4,4 +4,9 @@
     <string name="meals">Meals</string>
     <string name="ingredients">Ingredients</string>
     <string name="edit">Edit</string>
+    <string name="meal_name_epsilon">Meal Name…</string>
+    <string name="ingredient_epsilon">Ingredient…</string>
+    <string name="quantity">Quantity</string>
+    <string name="optional">(Optional)</string>
+    <string name="ingredient">Ingredient</string>
 </resources>

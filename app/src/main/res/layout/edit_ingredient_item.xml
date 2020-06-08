@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/bullet"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginStart="4dp"
+        android:src="@drawable/bullet_point"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_ingredient_name"
+        app:layout_constraintBottom_toBottomOf="@+id/et_ingredient_name"/>
+
+    <EditText
+        android:id="@+id/et_ingredient_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="8dp"
+        android:hint="@string/ingredient_epsilon"
+        android:inputType="textCapSentences"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/ib_delete_ingredient"
+        app:layout_constraintStart_toEndOf="@+id/bullet"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/ib_delete_ingredient"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:minWidth="0dp"
+        android:src="@drawable/ic_cross"
+        app:layout_constraintBottom_toBottomOf="@+id/et_ingredient_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/et_ingredient_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_optional_units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/optional"
+        android:layout_marginStart="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/et_ingredient_units"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/et_ingredient_units" />
+
+    <EditText
+        android:id="@+id/et_ingredient_units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/quantity"
+        android:textSize="14sp"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toEndOf="@+id/tv_optional_units"
+        app:layout_constraintTop_toBottomOf="@+id/et_ingredient_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

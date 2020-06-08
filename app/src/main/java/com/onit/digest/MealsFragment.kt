@@ -42,8 +42,8 @@ class MealsFragment : Fragment() {
                 viewModel.onMealItemExpandToggle(mealWithIngredients)
             },
             { mealWithIngredients ->
-                val action = MealsFragmentDirections.editMealAction()
-                findNavController().navigate(action)
+                val directions = MealsFragmentDirections.editMealAction(mealWithIngredients)
+                findNavController().navigate(directions)
             }
         )
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
