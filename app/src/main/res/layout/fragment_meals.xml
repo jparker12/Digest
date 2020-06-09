@@ -12,4 +12,13 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/meal_item" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_meal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        app:layout_anchor="@+id/rv_meals"
+        app:layout_anchorGravity="bottom|end"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

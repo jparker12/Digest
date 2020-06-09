@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.onit.digest.viewmodel.MealsViewModel
 
 /**
@@ -36,7 +37,10 @@ class MealsFragment : Fragment() {
             MealsViewModel.Factory(requireActivity().application)
         ).get(MealsViewModel::class.java)
 
-        val recyclerView: RecyclerView = requireView().findViewById(R.id.rv_meals)
+        val view = requireView()
+
+        val recyclerView: RecyclerView = view.findViewById(R.id.rv_meals)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         mealsAdapter = MealsAdapter(
             { mealWithIngredients ->
                 viewModel.onMealItemExpandToggle(mealWithIngredients)
@@ -46,8 +50,24 @@ class MealsFragment : Fragment() {
                 findNavController().navigate(directions)
             }
         )
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = mealsAdapter
+
+        val fabAddMeal: FloatingActionButton = view.findViewById(R.id.fab_add_meal)
+        fabAddMeal.setOnClickListener {
+            val directions = MealsFragmentDirections.editMealAction()
+            findNavController().navigate(directions)
+        }
+
+        // Hide FAB on scroll down
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0 && fabAddMeal.isShown) {
+                    fabAddMeal.hide()
+                } else if (dy < 0 && !fabAddMeal.isShown) {
+                    fabAddMeal.show()
+                }
+            }
+        })
 
         // Observe changes in MealWithIngredients list
         viewModel.allMeals.observe(viewLifecycleOwner, Observer { allMeals ->
