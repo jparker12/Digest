@@ -23,8 +23,10 @@
         android:layout_marginStart="8dp"
         android:hint="@string/ingredient_epsilon"
         android:inputType="textCapSentences"
+        android:maxLines="1"
         android:textSize="16sp"
         android:completionThreshold="1"
+        android:imeOptions="actionDone|flagNoExtractUi"
         app:layout_constraintEnd_toStartOf="@+id/ib_delete_ingredient"
         app:layout_constraintStart_toEndOf="@+id/bullet"
         app:layout_constraintTop_toTopOf="parent" />
@@ -60,6 +62,7 @@
         android:hint="@string/quantity"
         android:textSize="14sp"
         android:inputType="numberDecimal"
+        android:imeOptions="actionDone|flagNoExtractUi"
         app:layout_constraintStart_toEndOf="@+id/tv_optional_units"
         app:layout_constraintTop_toBottomOf="@+id/actv_ingredient_name" />
 
