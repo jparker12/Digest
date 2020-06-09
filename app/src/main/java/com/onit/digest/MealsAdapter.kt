@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,11 +15,12 @@ import com.onit.digest.model.MealWithIngredients
 
 class MealsAdapter(
     private val onMealExpandToggle: (mealWithIngredients: MealWithIngredients) -> Unit,
-    private val onEditMealClick: (mealWithIngredients: MealWithIngredients) -> Unit
+    private val onEditMealClick: (mealWithIngredients: MealWithIngredients, cvMeal: CardView) -> Unit
 ) :
     ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(DiffCallback()) {
 
     private var expandedMealIds = emptySet<Int>()
+
     // Keep track of the last item that was expanded/collapsed so it can be animated when
     // setExpandedMealIds() is called
     private var lastExpandedPosition: Int? = null
@@ -51,6 +53,7 @@ class MealsAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cvMeal: CardView = itemView.findViewById(R.id.cv_meal)
         val tvName: TextView = itemView.findViewById(R.id.tv_meal)
         val layoutExpandable: ConstraintLayout = itemView.findViewById(R.id.layout_expandable)
         val rvIngredients: RecyclerView = itemView.findViewById(R.id.rv_ingredients)
@@ -63,7 +66,7 @@ class MealsAdapter(
             }
             val bnEditMeal: Button = itemView.findViewById(R.id.bn_edit_meal)
             bnEditMeal.setOnClickListener {
-                onEditMealClick(getItem(adapterPosition))
+                onEditMealClick(getItem(adapterPosition), cvMeal)
             }
         }
     }
@@ -76,6 +79,7 @@ class MealsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val mealWithIngredients = getItem(position)
+        holder.cvMeal.transitionName = "transition.card.meal.$position"
         holder.tvName.text = mealWithIngredients.meal.name
         holder.rvIngredients.layoutManager = LinearLayoutManager(holder.rvIngredients.context)
         val adapter = ChildIngredientAdapter()

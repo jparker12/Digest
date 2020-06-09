@@ -1,9 +1,13 @@
 package com.onit.digest.viewmodel
 
 import android.app.Application
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.*
 import androidx.navigation.NavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.navOptions
 import com.onit.digest.MealsFragmentDirections
+import com.onit.digest.R
 import com.onit.digest.model.DatabaseHelper
 import com.onit.digest.model.MealRepository
 import com.onit.digest.model.MealWithIngredients
@@ -41,14 +45,23 @@ class MealsViewModel(
         _expandedMealIds.value = currentSet
     }
 
-    fun onEditMealClick(navController: NavController, mealWithIngredients: MealWithIngredients) {
+    fun onEditMealClick(navController: NavController, mealWithIngredients: MealWithIngredients, cvMeal: CardView) {
         val directions = MealsFragmentDirections.editMealAction(mealWithIngredients)
-        navController.navigate(directions)
+        val extras = FragmentNavigatorExtras(
+            cvMeal to getApplication<Application>().getString(R.string.transition_meal_card)
+        )
+        navController.navigate(directions, extras)
     }
 
     fun onAddMealClick(navController: NavController) {
         val directions = MealsFragmentDirections.editMealAction()
-        navController.navigate(directions)
+        val options = navOptions {
+            anim {
+                enter = R.anim.slide_in_bottom
+                popExit = R.anim.slide_out_bottom
+            }
+        }
+        navController.navigate(directions, options)
     }
 
 }

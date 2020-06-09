@@ -9,4 +9,5 @@
     <string name="quantity">Quantity</string>
     <string name="optional">(Optional)</string>
     <string name="ingredient">Ingredient</string>
+    <string name="transition_meal_card">transition.meal.card</string>
 </resources>

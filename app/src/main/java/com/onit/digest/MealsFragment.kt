@@ -45,8 +45,8 @@ class MealsFragment : Fragment() {
             { mealWithIngredients ->
                 viewModel.onMealItemExpandToggle(mealWithIngredients)
             },
-            { mealWithIngredients ->
-                viewModel.onEditMealClick(findNavController(), mealWithIngredients)
+            { mealWithIngredients, cvMeal ->
+                viewModel.onEditMealClick(findNavController(), mealWithIngredients, cvMeal)
             }
         )
         recyclerView.adapter = mealsAdapter
@@ -75,5 +75,12 @@ class MealsFragment : Fragment() {
         viewModel.expandedMealIds.observe(viewLifecycleOwner, Observer { expandedMealIds ->
             mealsAdapter.setExpandedMealIds(expandedMealIds)
         })
+
+        // Ensures the pop animation works when exiting EditMealFragment
+        postponeEnterTransition()
+        recyclerView.viewTreeObserver.addOnPreDrawListener {
+            startPostponedEnterTransition()
+            true
+        }
     }
 }
