@@ -3,6 +3,8 @@ package com.onit.digest
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.core.widget.addTextChangedListener
@@ -10,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.viewmodel.EditMealViewModel
 
 class EditIngredientAdapter(
-    private val editIngredients: MutableList<EditMealViewModel.EditIngredientWithExtra>
+    private val editIngredients: MutableList<EditMealViewModel.EditIngredientWithExtra>,
+    private val allIngredients: Array<String>
 ) :
     RecyclerView.Adapter<EditIngredientAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val etName: EditText = itemView.findViewById(R.id.et_ingredient_name)
+        val actvName: AutoCompleteTextView = itemView.findViewById(R.id.actv_ingredient_name)
         val etUnits: EditText = itemView.findViewById(R.id.et_ingredient_units)
 
         init {
@@ -23,14 +26,15 @@ class EditIngredientAdapter(
             ibDelete.setOnClickListener {
                 val position = adapterPosition
                 editIngredients.removeAt(position)
-                if (etName.hasFocus()) {
-                    etName.clearFocus()
+                if (actvName.hasFocus()) {
+                    actvName.clearFocus()
                 } else if (etUnits.hasFocus()) {
                     etUnits.clearFocus()
                 }
                 notifyItemRemoved(position)
             }
-            etName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
+            actvName.setAdapter(ArrayAdapter(actvName.context, android.R.layout.simple_dropdown_item_1line, allIngredients))
+            actvName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 editIngredients[adapterPosition].ingredientName = text?.toString()?.trim()
             })
             etUnits.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -47,7 +51,7 @@ class EditIngredientAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val editIngredient = editIngredients[position]
-        holder.etName.setText(editIngredient.ingredientName)
+        holder.actvName.setText(editIngredient.ingredientName)
         holder.etUnits.setText(editIngredient.quantity?.toString())
     }
 

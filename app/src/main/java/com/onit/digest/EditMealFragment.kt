@@ -50,12 +50,15 @@ class EditMealFragment : Fragment() {
 
         val view = requireView()
 
+        // Set action bar title
         (requireActivity() as AppCompatActivity).supportActionBar?.title = viewModel.actionBarTitle
 
         val etMealName: EditText = view.findViewById(R.id.et_meal_name)
         etMealName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
+            // Update model when meal name changes
             viewModel.onMealNameChanged(text?.toString() ?: "")
         })
+        // Observe meal name changes (two-way binding so only update if changed)
         viewModel.mealName.observe(viewLifecycleOwner, Observer { mealName ->
             if (mealName != etMealName.text.toString()) {
                 etMealName.setText(mealName)
@@ -64,12 +67,23 @@ class EditMealFragment : Fragment() {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_ingredients)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-        val adapter = EditIngredientAdapter(viewModel.editIngredients)
-        recyclerView.adapter = adapter
-
         val bnAddIngredient = view.findViewById<Button>(R.id.bn_add_ingredient)
-        bnAddIngredient.setOnClickListener {
-            adapter.onAddIngredientClick()
-        }
+        // Postpone animation until data is ready
+        postponeEnterTransition()
+        // Get all ingredient names for autocomplete dropdown and setup adapter
+        viewModel.allIngredientsName.observe(viewLifecycleOwner, object : Observer<List<String>> {
+            override fun onChanged(ingredientNames: List<String>) {
+                // observe once only
+                viewModel.allIngredientsName.removeObserver(this)
+                // Setup adapter
+                val adapter = EditIngredientAdapter(viewModel.editIngredients, ingredientNames.toTypedArray())
+                recyclerView.adapter = adapter
+                bnAddIngredient.setOnClickListener {
+                    adapter.onAddIngredientClick()
+                }
+                // Start the animation
+                startPostponedEnterTransition()
+            }
+        })
     }
 }

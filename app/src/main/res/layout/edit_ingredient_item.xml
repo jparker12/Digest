@@ -12,11 +12,11 @@
         android:layout_marginStart="4dp"
         android:src="@drawable/bullet_point"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/et_ingredient_name"
-        app:layout_constraintBottom_toBottomOf="@+id/et_ingredient_name"/>
+        app:layout_constraintTop_toTopOf="@+id/actv_ingredient_name"
+        app:layout_constraintBottom_toBottomOf="@+id/actv_ingredient_name"/>
 
-    <EditText
-        android:id="@+id/et_ingredient_name"
+    <AutoCompleteTextView
+        android:id="@+id/actv_ingredient_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -24,6 +24,7 @@
         android:hint="@string/ingredient_epsilon"
         android:inputType="textCapSentences"
         android:textSize="16sp"
+        android:completionThreshold="1"
         app:layout_constraintEnd_toStartOf="@+id/ib_delete_ingredient"
         app:layout_constraintStart_toEndOf="@+id/bullet"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,9 +38,9 @@
         android:layout_marginTop="4dp"
         android:minWidth="0dp"
         android:src="@drawable/ic_cross"
-        app:layout_constraintBottom_toBottomOf="@+id/et_ingredient_name"
+        app:layout_constraintBottom_toBottomOf="@+id/actv_ingredient_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_ingredient_name"
+        app:layout_constraintStart_toEndOf="@+id/actv_ingredient_name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -60,6 +61,6 @@
         android:textSize="14sp"
         android:inputType="numberDecimal"
         app:layout_constraintStart_toEndOf="@+id/tv_optional_units"
-        app:layout_constraintTop_toBottomOf="@+id/et_ingredient_name" />
+        app:layout_constraintTop_toBottomOf="@+id/actv_ingredient_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

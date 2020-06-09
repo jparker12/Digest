@@ -43,4 +43,8 @@ class EditMealViewModel(
             EditIngredientWithExtra(it.ingredient.name, it.units)
         }?.toMutableList() ?: mutableListOf()
 
+    val allIngredients = repository.getAllIngredients()
+
+    val allIngredientsName = Transformations.map(allIngredients) { list -> list.map { it.name } }
+
 }
