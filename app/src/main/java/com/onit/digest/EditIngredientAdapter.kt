@@ -1,8 +1,10 @@
 package com.onit.digest
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
@@ -17,6 +19,8 @@ class EditIngredientAdapter(
 ) :
     RecyclerView.Adapter<EditIngredientAdapter.ViewHolder>() {
 
+    private var isIngredientAdded = false
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val actvName: AutoCompleteTextView = itemView.findViewById(R.id.actv_ingredient_name)
         val etUnits: EditText = itemView.findViewById(R.id.et_ingredient_units)
@@ -26,14 +30,22 @@ class EditIngredientAdapter(
             ibDelete.setOnClickListener {
                 val position = adapterPosition
                 editIngredients.removeAt(position)
+                // Hide keyboard if this item has focus
                 if (actvName.hasFocus()) {
-                    actvName.clearFocus()
+                    toggleKeyboard(actvName, false)
                 } else if (etUnits.hasFocus()) {
-                    etUnits.clearFocus()
+                    toggleKeyboard(etUnits, false)
                 }
                 notifyItemRemoved(position)
             }
-            actvName.setAdapter(ArrayAdapter(actvName.context, android.R.layout.simple_dropdown_item_1line, allIngredients))
+            // Auto-complete values
+            actvName.setAdapter(
+                ArrayAdapter(
+                    actvName.context,
+                    android.R.layout.simple_dropdown_item_1line,
+                    allIngredients
+                )
+            )
             actvName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 editIngredients[adapterPosition].ingredientName = text?.toString()?.trim()
             })
@@ -53,13 +65,30 @@ class EditIngredientAdapter(
         val editIngredient = editIngredients[position]
         holder.actvName.setText(editIngredient.ingredientName)
         holder.etUnits.setText(editIngredient.quantity?.toString())
+        // Open keyboard for this newly added ingredient
+        if (isIngredientAdded && position == itemCount - 1) {
+            isIngredientAdded = false
+            toggleKeyboard(holder.actvName, true)
+        }
     }
 
     override fun getItemCount(): Int = editIngredients.size
 
     fun onAddIngredientClick() {
         editIngredients.add(EditMealViewModel.EditIngredientWithExtra())
+        isIngredientAdded = true
         notifyItemInserted(editIngredients.size - 1)
+    }
+
+    private fun toggleKeyboard(editText: EditText, open: Boolean) {
+        val imm = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (open) {
+            editText.requestFocus()
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        } else {
+            editText.clearFocus()
+            imm.hideSoftInputFromWindow(editText.windowToken, 0)
+        }
     }
 
 }
