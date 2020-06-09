@@ -46,16 +46,14 @@ class MealsFragment : Fragment() {
                 viewModel.onMealItemExpandToggle(mealWithIngredients)
             },
             { mealWithIngredients ->
-                val directions = MealsFragmentDirections.editMealAction(mealWithIngredients)
-                findNavController().navigate(directions)
+                viewModel.onEditMealClick(findNavController(), mealWithIngredients)
             }
         )
         recyclerView.adapter = mealsAdapter
 
         val fabAddMeal: FloatingActionButton = view.findViewById(R.id.fab_add_meal)
         fabAddMeal.setOnClickListener {
-            val directions = MealsFragmentDirections.editMealAction()
-            findNavController().navigate(directions)
+            viewModel.onAddMealClick(findNavController())
         }
 
         // Hide FAB on scroll down

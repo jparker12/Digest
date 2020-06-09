@@ -2,6 +2,8 @@ package com.onit.digest.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.navigation.NavController
+import com.onit.digest.MealsFragmentDirections
 import com.onit.digest.model.DatabaseHelper
 import com.onit.digest.model.MealRepository
 import com.onit.digest.model.MealWithIngredients
@@ -37,6 +39,16 @@ class MealsViewModel(
             currentSet.remove(mealWithIngredients.meal.id)
         }
         _expandedMealIds.value = currentSet
+    }
+
+    fun onEditMealClick(navController: NavController, mealWithIngredients: MealWithIngredients) {
+        val directions = MealsFragmentDirections.editMealAction(mealWithIngredients)
+        navController.navigate(directions)
+    }
+
+    fun onAddMealClick(navController: NavController) {
+        val directions = MealsFragmentDirections.editMealAction()
+        navController.navigate(directions)
     }
 
 }
