@@ -63,6 +63,7 @@
         android:textSize="14sp"
         android:inputType="numberDecimal"
         android:imeOptions="actionDone|flagNoExtractUi"
+        android:gravity="center"
         app:layout_constraintStart_toEndOf="@+id/tv_optional_units"
         app:layout_constraintTop_toBottomOf="@+id/actv_ingredient_name" />
 
