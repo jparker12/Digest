@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/meals_dest"
         android:name="com.onit.digest.MealsFragment"
-        android:label="@string/meals"
+        android:label="@string/my_meals"
         tools:layout="@layout/fragment_meals">
         <action
             android:id="@+id/edit_meal_action"
@@ -17,7 +17,8 @@
 
     <fragment
         android:id="@+id/edit_meal_dest"
-        android:name="com.onit.digest.EditMealFragment">
+        android:name="com.onit.digest.EditMealFragment"
+        tools:layout="@layout/fragment_edit_meal">
 
         <argument
             android:name="selectedMeal"

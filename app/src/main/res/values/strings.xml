@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Digest</string>
 
-    <string name="meals">Meals</string>
+    <string name="my_meals">My Meals</string>
     <string name="ingredients">Ingredients</string>
     <string name="edit">Edit</string>
     <string name="meal_name_epsilon">Meal Name…</string>
@@ -10,4 +10,13 @@
     <string name="optional">(Optional)</string>
     <string name="ingredient">Ingredient</string>
     <string name="transition_meal_card">transition.meal.card</string>
+    <string name="new_meal">New Meal</string>
+    <string name="edit_meal">Edit Meal</string>
+    <string name="error_meal_name_blank">Meals must have a name</string>
+    <string name="error_zero_ingredients">Meals must have at least one ingredient</string>
+    <string name="error_ingredient_name_blank">Ingredients must have a name</string>
+    <string name="error_meal_name_duplicate">A Meal with this name already exists</string>
+    <string name="meal_saved">Meal saved</string>
+    <string name="error_duplicate_ingredients">Cannot include multiple ingredients with the same name</string>
+    <string name="save">Save</string>
 </resources>

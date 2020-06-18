@@ -4,6 +4,6 @@
     <item
         android:id="@+id/meals_dest"
         android:icon="@drawable/ic_meals"
-        android:title="@string/meals" />
+        android:title="@string/my_meals" />
 
 </menu>

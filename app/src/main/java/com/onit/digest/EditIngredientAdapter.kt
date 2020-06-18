@@ -47,7 +47,7 @@ class EditIngredientAdapter(
                 )
             )
             actvName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
-                editIngredients[adapterPosition].ingredientName = text?.toString()?.trim()
+                editIngredients[adapterPosition].ingredientName = text?.toString()?.trim() ?: ""
             })
             etUnits.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 editIngredients[adapterPosition].quantity = text?.toString()?.trim()?.toIntOrNull()
@@ -81,10 +81,14 @@ class EditIngredientAdapter(
     }
 
     private fun toggleKeyboard(editText: EditText, open: Boolean) {
-        val imm = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (open) {
             editText.requestFocus()
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+            imm.toggleSoftInput(
+                InputMethodManager.SHOW_FORCED,
+                InputMethodManager.HIDE_IMPLICIT_ONLY
+            )
         } else {
             editText.clearFocus()
             imm.hideSoftInputFromWindow(editText.windowToken, 0)

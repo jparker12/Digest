@@ -10,6 +10,9 @@ interface MealDao {
     @Query(value = "SELECT * FROM meal")
     fun getAllMeals(): LiveData<List<MealEntity>>
 
+    @Query(value = "SELECT * FROM meal WHERE name COLLATE NOCASE = :mealName")
+    suspend fun getMealWithNameIgnoreCase(mealName: String): MealEntity?
+
     @Insert
     suspend fun insertMeal(meal: MealEntity): Long
 

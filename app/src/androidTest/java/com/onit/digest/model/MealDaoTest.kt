@@ -53,6 +53,16 @@ class MealDaoTest {
     }
 
     @Test
+    fun getMealWithNameIgnoreCase() = runBlockingTest {
+        prepopulateDatabase()
+        val expectedMeal = MealEntity(1, "Pasta Bolognese")
+        var actualMeal = mealDao.getMealWithNameIgnoreCase("Pasta Bolognese")
+        assertThat(actualMeal, `is`(expectedMeal))
+        actualMeal = mealDao.getMealWithNameIgnoreCase("pasta bolognese")
+        assertThat(actualMeal, `is`(expectedMeal))
+    }
+
+    @Test
     fun insertMeal() = runBlockingTest {
         val id = mealDao.insertMeal(MealEntity(name = "Test Meal"))
         mealDao.getAllMeals().observeForever {

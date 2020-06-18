@@ -9,8 +9,11 @@ interface IngredientDao {
     @Query(value = "SELECT * FROM ingredient")
     fun getAllIngredients(): LiveData<List<IngredientEntity>>
 
+    @Query(value = "SELECT * FROM ingredient WHERE name COLLATE NOCASE IN (:ingredientNames)")
+    suspend fun getIngredientsWithNameIgnoreCase(vararg ingredientNames: String): List<IngredientEntity>
+
     @Insert
-    suspend fun insertIngredients(vararg ingredients: IngredientEntity): List<Long>
+    suspend fun insertIngredient(ingredient: IngredientEntity): Long
 
     @Update
     suspend fun updateIngredients(vararg ingredients: IngredientEntity)

@@ -19,6 +19,9 @@ abstract class MealIngredientDao {
     @Query(value = "DELETE FROM meal_ingredient WHERE meal_id=:mealId AND ingredient_id=:ingredientId")
     abstract suspend fun deleteJoin(mealId: Int, ingredientId: Int)
 
+    @Query(value = "DELETE FROM meal_ingredient WHERE meal_id=:mealId")
+    abstract suspend fun deleteJoinsFor(mealId: Int)
+
     @Query(
         value = "SELECT meal.id as mealId, meal.name as mealName, ingredient.id as ingredientId, ingredient.name as ingredientName, meal_ingredient.units as ingredientUnits " +
                 "FROM meal " +

@@ -2,21 +2,21 @@ package com.onit.digest
 
 import android.content.Context
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
+import com.google.android.material.snackbar.Snackbar
 import com.onit.digest.viewmodel.EditMealViewModel
 
 /**
@@ -25,6 +25,10 @@ import com.onit.digest.viewmodel.EditMealViewModel
 class EditMealFragment : Fragment() {
 
     private lateinit var viewModel: EditMealViewModel
+    private lateinit var menuItemSave: MenuItem
+    private lateinit var etMealName: EditText
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var bnAddIngredient: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +40,7 @@ class EditMealFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_edit_meal, container, false)
     }
 
@@ -55,10 +59,10 @@ class EditMealFragment : Fragment() {
         // Set action bar title
         (requireActivity() as AppCompatActivity).supportActionBar?.title = viewModel.actionBarTitle
 
-        val etMealName: EditText = view.findViewById(R.id.et_meal_name)
+        etMealName = view.findViewById(R.id.et_meal_name)
         etMealName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
             // Update model when meal name changes
-            viewModel.onMealNameChanged(text?.toString() ?: "")
+            viewModel.onMealNameChanged(text?.toString()?.trim() ?: "")
         })
         // Observe meal name changes (two-way binding so only update if changed)
         viewModel.mealName.observe(viewLifecycleOwner, Observer { mealName ->
@@ -67,9 +71,23 @@ class EditMealFragment : Fragment() {
             }
         })
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.rv_ingredients)
+        recyclerView = view.findViewById(R.id.rv_ingredients)
         recyclerView.layoutManager = LinearLayoutManager(view.context)
-        val bnAddIngredient = view.findViewById<Button>(R.id.bn_add_ingredient)
+        bnAddIngredient = view.findViewById(R.id.bn_add_ingredient)
+
+        viewModel.snackbar.observe(viewLifecycleOwner, Observer { text ->
+            text?.let {
+                Snackbar.make(requireView(), text, Snackbar.LENGTH_SHORT).show()
+                viewModel.onSnackbarShown()
+            }
+        })
+
+        viewModel.isFinished.observe(viewLifecycleOwner, Observer { isFinished ->
+            if (isFinished) {
+                findNavController().popBackStack()
+            }
+        })
+
         // Postpone animation until data is ready
         postponeEnterTransition()
         // Get all ingredient names for autocomplete dropdown and setup adapter
@@ -78,15 +96,51 @@ class EditMealFragment : Fragment() {
                 // observe once only
                 viewModel.allIngredientsName.removeObserver(this)
                 // Setup adapter
-                val adapter = EditIngredientAdapter(viewModel.editIngredients, ingredientNames.toTypedArray())
+                val adapter =
+                    EditIngredientAdapter(viewModel.editIngredients, ingredientNames.toTypedArray())
                 recyclerView.adapter = adapter
                 bnAddIngredient.setOnClickListener {
                     adapter.onAddIngredientClick()
                 }
                 // Start the animation
                 startPostponedEnterTransition()
+                (activity as? MainActivity)?.hideBottomNav()
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.edit_meal_menu, menu)
+        menuItemSave = menu.findItem(R.id.menu_item_save)
+        menuItemSave.setOnMenuItemClickListener {
+            onSaveMealClick()
+            return@setOnMenuItemClickListener true
+        }
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+            menuItemSave.isEnabled = !isLoading
+            if (isLoading) {
+                menuItemSave.setActionView(R.layout.actionview_progress)
+            } else {
+                menuItemSave.actionView = null
+            }
+            etMealName.isEnabled = !isLoading
+            bnAddIngredient.isEnabled = !isLoading
+            recyclerView.forEach { setViewAndChildrenEnabled(it, !isLoading) }
+        })
+    }
+
+    private fun setViewAndChildrenEnabled(view: View, enabled: Boolean) {
+        view.isEnabled = enabled
+        if (view is ViewGroup) {
+            for (i in 0 until view.childCount) {
+                val childView = view.getChildAt(i)
+                setViewAndChildrenEnabled(childView, enabled)
+            }
+        }
+    }
+
+    private fun onSaveMealClick() {
+        viewModel.onSaveMealClick()
     }
 
     override fun onPause() {

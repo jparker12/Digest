@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.hamcrest.Matchers.*
 
 @RunWith(AndroidJUnit4::class)
 class IngredientDaoTest {
@@ -57,8 +58,23 @@ class IngredientDaoTest {
     }
 
     @Test
+    fun getIngredientsWithNameIgnoreCase() = runBlockingTest {
+        prepopulateDatabase()
+        val expectedPasta = IngredientEntity(1, "Pasta")
+        val expectedRice = IngredientEntity(3, "Rice")
+
+        var actualList = ingredientDao.getIngredientsWithNameIgnoreCase("Pasta", "Rice")
+        assertThat(expectedPasta, isIn(actualList))
+        assertThat(expectedRice, isIn(actualList))
+
+        actualList = ingredientDao.getIngredientsWithNameIgnoreCase("pasta", "rice")
+        assertThat(expectedPasta, isIn(actualList))
+        assertThat(expectedRice, isIn(actualList))
+    }
+
+    @Test
     fun insertIngredient() = runBlockingTest {
-        ingredientDao.insertIngredients(IngredientEntity(name = "Broccoli"))
+        ingredientDao.insertIngredient(IngredientEntity(name = "Broccoli"))
         ingredientDao.getAllIngredients().observeForever {
             assertEquals(1, it.size)
             assertEquals(IngredientEntity(1, "Broccoli"), it[0])
@@ -68,7 +84,7 @@ class IngredientDaoTest {
     @Test(expected = SQLiteConstraintException::class)
     fun insertIngredientNameUnique() = runBlockingTest {
         prepopulateDatabase()
-        ingredientDao.insertIngredients(IngredientEntity(name = "Pasta"))
+        ingredientDao.insertIngredient(IngredientEntity(name = "Pasta"))
     }
 
     @Test

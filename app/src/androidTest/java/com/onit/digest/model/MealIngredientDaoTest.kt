@@ -154,28 +154,26 @@ class MealIngredientDaoTest {
     }
 
     @Test
-    fun getAllMealsWithIngredients_() = runBlockingTest {
+    fun deleteJoinsFor() = runBlockingTest {
         prepopulateDatabase()
 
-        val mealDao = digestDb.mealDao()
-        val ingredientDao = digestDb.ingredientDao()
+        digestDb.mealIngredientDao().deleteJoinsFor(1)
+        digestDb.mealIngredientDao().getAllMealIngredientJoin().observeForever { joins ->
+            val pastaJoin = MealIngredientEntity(1, 1)
+            val bologneseJoin = MealIngredientEntity(1, 2)
+            assertThat(pastaJoin, not(isIn(joins)))
+            assertThat(bologneseJoin, not(isIn(joins)))
 
-        mealIngredientDao.getAllMealsWithIngredients().observeForever {
-            assert(true)
+            digestDb.mealDao().getAllMeals().observeForever { meals ->
+                val pastaBologneseMeal = MealEntity(1, "Pasta Bolognese")
+                assertThat(pastaBologneseMeal, isIn(meals))
+            }
+            digestDb.ingredientDao().getAllIngredients().observeForever { ingredients ->
+                val pastaIngredient = IngredientEntity(1, "Pasta")
+                val bologneseIngredient = IngredientEntity(2, "Bolognese Sauce")
+                assertThat(pastaIngredient, isIn(ingredients))
+                assertThat(bologneseIngredient, isIn(ingredients))
+            }
         }
-        Transformations.distinctUntilChanged(mealIngredientDao.getAllMealsWithIngredients()).observeForever {
-            assert(true)
-        }
-        mealDao.updateMeal(MealEntity(1, "Spaghetti Bolognese"))
-        ingredientDao.updateIngredients(IngredientEntity(1, "Spaghetti"))
-        ingredientDao.insertIngredients(IngredientEntity(name = "Broccoli"))
-        mealDao.deleteMeal(1)
-        ingredientDao.getAllIngredients().observeForever {
-            assert(true)
-        }
-        mealIngredientDao.getAllMealIngredientJoin().observeForever {
-            assert(true)
-        }
-        ingredientDao.deleteIngredients(3)
     }
 }
