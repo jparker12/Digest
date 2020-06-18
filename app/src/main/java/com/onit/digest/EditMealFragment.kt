@@ -62,7 +62,7 @@ class EditMealFragment : Fragment() {
         etMealName = view.findViewById(R.id.et_meal_name)
         etMealName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
             // Update model when meal name changes
-            viewModel.onMealNameChanged(text?.toString()?.trim() ?: "")
+            viewModel.onMealNameChanged(text?.toString() ?: "")
         })
         // Observe meal name changes (two-way binding so only update if changed)
         viewModel.mealName.observe(viewLifecycleOwner, Observer { mealName ->

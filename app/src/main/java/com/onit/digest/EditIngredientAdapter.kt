@@ -47,7 +47,7 @@ class EditIngredientAdapter(
                 )
             )
             actvName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
-                editIngredients[adapterPosition].ingredientName = text?.toString()?.trim() ?: ""
+                editIngredients[adapterPosition].ingredientName = text?.toString() ?: ""
             })
             etUnits.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 editIngredients[adapterPosition].quantity = text?.toString()?.trim()?.toIntOrNull()
