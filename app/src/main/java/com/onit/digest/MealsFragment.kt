@@ -9,9 +9,12 @@ import android.view.ViewTreeObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.onit.digest.viewmodel.MealsViewModel
 
 /**
@@ -68,9 +71,41 @@ class MealsFragment : Fragment() {
             }
         })
 
+        ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val mealWithIngredients =
+                    mealsAdapter.getMealWithIngredients(viewHolder.adapterPosition)
+                viewModel.onMealArchive(mealWithIngredients)
+            }
+        }).attachToRecyclerView(recyclerView)
+
         // Observe changes in MealWithIngredients list
         viewModel.allMeals.observe(viewLifecycleOwner, Observer { allMeals ->
             mealsAdapter.submitList(allMeals)
+        })
+        viewModel.archivedMeal.observe(viewLifecycleOwner, Observer { mealWithIngredients ->
+            if (mealWithIngredients != null) {
+                viewModel.onSnackbarShown()
+                Snackbar.make(view, R.string.meal_deleted, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo) {
+                        viewModel.onArchivedMealUndo(mealWithIngredients)
+                    }
+                    .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            if (event != DISMISS_EVENT_ACTION) {
+                                viewModel.onMealDelete(mealWithIngredients)
+                            }
+                        }
+                    })
+                    .show()
+            }
         })
         // Observe changes in expanded meal items to show ingredients in the recycler view
         viewModel.expandedMealIds.observe(viewLifecycleOwner, Observer { expandedMealIds ->
@@ -79,7 +114,8 @@ class MealsFragment : Fragment() {
 
         // Ensures the pop animation works when exiting EditMealFragment
         postponeEnterTransition()
-        recyclerView.viewTreeObserver.addOnPreDrawListener(object: ViewTreeObserver.OnPreDrawListener {
+        recyclerView.viewTreeObserver.addOnPreDrawListener(object :
+            ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
                 recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
                 startPostponedEnterTransition()

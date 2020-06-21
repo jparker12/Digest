@@ -12,6 +12,15 @@ class MealRepository(private val dbHelper: DatabaseHelper) {
     fun getAllIngredients() =
         Transformations.distinctUntilChanged(dbHelper.ingredientDao.getAllIngredients())
 
+    suspend fun setMealArchived(mealWithIngredients: MealWithIngredients, isArchived: Boolean) {
+        val updateMeal = mealWithIngredients.meal.copy(isArchived = isArchived)
+        dbHelper.mealDao.updateMeal(updateMeal)
+    }
+
+    suspend fun deleteMeal(mealWithIngredients: MealWithIngredients) {
+        dbHelper.mealDao.deleteMeal(mealWithIngredients.meal.id)
+    }
+
     suspend fun addMealWithIngredients(
         mealName: String,
         editIngredients: Map<String, EditMealViewModel.EditIngredientWithExtra>

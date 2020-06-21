@@ -7,7 +7,7 @@ import androidx.room.*
 interface MealDao {
 
     @Transaction
-    @Query(value = "SELECT * FROM meal")
+    @Query(value = "SELECT * FROM meal WHERE is_archived = 0")
     fun getAllMeals(): LiveData<List<MealEntity>>
 
     @Query(value = "SELECT * FROM meal WHERE name COLLATE NOCASE = :mealName")

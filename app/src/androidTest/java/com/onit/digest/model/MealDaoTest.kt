@@ -33,7 +33,7 @@ class MealDaoTest {
     private fun prepopulateDatabase() {
         executeSql(
             digestDb,
-            "INSERT INTO meal (id,name) values (1,'Pasta Bolognese'), (2,'Thai Curry')"
+            "INSERT INTO meal (id,name,is_archived) values (1,'Pasta Bolognese',0), (2,'Thai Curry',0), (3,'Archived Meal',1)"
         )
     }
 
@@ -85,6 +85,34 @@ class MealDaoTest {
         mealDao.updateMeal(updatedMeal)
         mealDao.getAllMeals().observeForever {
             assertEquals(updatedMeal, it[1])
+        }
+    }
+
+    @Test
+    fun updateMealArchive() = runBlockingTest {
+        prepopulateDatabase()
+
+        val updatedMeal = MealEntity(2, "Thai Curry", true)
+        mealDao.updateMeal(updatedMeal)
+        mealDao.getAllMeals().observeForever {
+            var inList = false
+            for (meal in it) {
+                if (meal.id == 2) {
+                    inList = true
+                }
+            }
+            assertFalse(inList)
+        }
+    }
+
+    @Test
+    fun updateMealNotArchive() = runBlockingTest {
+        prepopulateDatabase()
+
+        val updatedMeal = MealEntity(3, "Archived Meal", false)
+        mealDao.updateMeal(updatedMeal)
+        mealDao.getAllMeals().observeForever {
+            assertThat(updatedMeal, isIn(it))
         }
     }
 

@@ -11,6 +11,8 @@ import com.onit.digest.R
 import com.onit.digest.model.DatabaseHelper
 import com.onit.digest.model.MealRepository
 import com.onit.digest.model.MealWithIngredients
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MealsViewModel(
     application: Application,
@@ -29,6 +31,10 @@ class MealsViewModel(
 
     val allMeals = repository.getAllMealsWithIngredients()
 
+    private val _archivedMeal: MutableLiveData<MealWithIngredients> = MutableLiveData()
+    val archivedMeal: LiveData<MealWithIngredients>
+        get() = _archivedMeal
+
     // Set of meal Ids that have been expanded to show ingredients in the recycler view
     private val _expandedMealIds: MutableLiveData<Set<Int>> = MutableLiveData(emptySet())
     val expandedMealIds: LiveData<Set<Int>>
@@ -45,7 +51,11 @@ class MealsViewModel(
         _expandedMealIds.value = currentSet
     }
 
-    fun onEditMealClick(navController: NavController, mealWithIngredients: MealWithIngredients, cvMeal: CardView) {
+    fun onEditMealClick(
+        navController: NavController,
+        mealWithIngredients: MealWithIngredients,
+        cvMeal: CardView
+    ) {
         val directions = MealsFragmentDirections.editMealAction(mealWithIngredients)
         val extras = FragmentNavigatorExtras(
             cvMeal to getApplication<Application>().getString(R.string.transition_meal_card)
@@ -62,6 +72,23 @@ class MealsViewModel(
             }
         }
         navController.navigate(directions, options)
+    }
+
+    fun onMealArchive(mealWithIngredients: MealWithIngredients) = viewModelScope.launch {
+        repository.setMealArchived(mealWithIngredients, true)
+        _archivedMeal.value = mealWithIngredients
+    }
+
+    fun onSnackbarShown() {
+        _archivedMeal.value = null
+    }
+
+    fun onArchivedMealUndo(mealWithIngredients: MealWithIngredients) = viewModelScope.launch {
+        repository.setMealArchived(mealWithIngredients, false)
+    }
+
+    fun onMealDelete(mealWithIngredients: MealWithIngredients) = GlobalScope.launch {
+        repository.deleteMeal(mealWithIngredients)
     }
 
 }

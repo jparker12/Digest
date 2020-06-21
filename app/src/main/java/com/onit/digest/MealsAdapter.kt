@@ -103,4 +103,6 @@ class MealsAdapter(
             )
         }
     }
+
+    fun getMealWithIngredients(position: Int): MealWithIngredients = getItem(position)
 }

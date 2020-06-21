@@ -13,5 +13,7 @@ data class MealEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(typeAffinity = ColumnInfo.INTEGER)
     val id: Int = 0,
-    val name: String
+    val name: String,
+    @ColumnInfo(name = "is_archived", defaultValue = "0")
+    val isArchived: Boolean = false
 ) : Parcelable

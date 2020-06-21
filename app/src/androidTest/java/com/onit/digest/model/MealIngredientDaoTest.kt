@@ -33,7 +33,7 @@ class MealIngredientDaoTest {
     private fun prepopulateDatabase() {
         executeSql(
             digestDb,
-            "INSERT INTO meal (id,name) values (1,'Pasta Bolognese'), (2,'Thai Curry'), (3, 'Sausage & Mash')",
+            "INSERT INTO meal (id,name,is_archived) values (1,'Pasta Bolognese',0), (2,'Thai Curry',0), (3, 'Sausage & Mash',0),(4,'Archived Meal',1)",
             "INSERT INTO ingredient (id,name) values (1,'Pasta'), (2,'Bolognese Sauce'), (3,'Rice'), (4,'Green Thai Curry Sauce'), (5,'Bell Pepper')",
             "INSERT INTO meal_ingredient (meal_id,ingredient_id,units) values (1,1,null),(1,2,null),(2,3,null),(2,4,null),(2,5,2)"
         )

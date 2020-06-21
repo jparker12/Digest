@@ -19,4 +19,6 @@
     <string name="meal_saved">Meal saved</string>
     <string name="error_duplicate_ingredients">Cannot include multiple ingredients with the same name</string>
     <string name="save">Save</string>
+    <string name="meal_deleted">Meal Deleted</string>
+    <string name="undo">Undo</string>
 </resources>

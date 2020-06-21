@@ -23,10 +23,11 @@ abstract class MealIngredientDao {
     abstract suspend fun deleteJoinsFor(mealId: Int)
 
     @Query(
-        value = "SELECT meal.id as mealId, meal.name as mealName, ingredient.id as ingredientId, ingredient.name as ingredientName, meal_ingredient.units as ingredientUnits " +
+        value = "SELECT meal.id as mealId, meal.name as mealName, meal.is_archived as mealIsArchived, ingredient.id as ingredientId, ingredient.name as ingredientName, meal_ingredient.units as ingredientUnits " +
                 "FROM meal " +
                 "LEFT JOIN meal_ingredient ON meal.id = meal_ingredient.meal_id " +
                 "LEFT JOIN ingredient ON ingredient.id = meal_ingredient.ingredient_id " +
+                "WHERE mealIsArchived = 0 " +
                 "ORDER BY mealId"
     )
     protected abstract fun getAllDetailMealIngredientJoin(): LiveData<List<MealIngredientJoin>>
@@ -34,12 +35,16 @@ abstract class MealIngredientDao {
     fun getAllMealsWithIngredients(): LiveData<List<MealWithIngredients>> {
         // Convert list of MealIngredientJoin to list of MealWithIngredients
         return Transformations.map(getAllDetailMealIngredientJoin()) { mealIngredientJoin ->
-            // Group items by the mealId (included mealName in key for convenience)
-            mealIngredientJoin.groupBy { Pair(it.mealId, it.mealName) }
+            // Group items by the mealId
+            mealIngredientJoin.groupBy { it.mealId }
                 // map the grouped MealIngredientJoins to MealWithIngredients
                 .entries.map { grouped ->
+                    val mealId = grouped.key
+                    val mealName = grouped.value.first().mealName
+                    val mealIsArchived = grouped.value.first().mealIsArchived
                     MealWithIngredients(
-                        MealEntity(grouped.key.first, grouped.key.second),
+                        MealEntity(mealId, mealName, mealIsArchived),
+                        // Map items to IngredientWithExtras
                         // Make sure to only take if the ingredientId is not null.
                         // This will happen if there is a meal with no ingredients (UI should prevent this case)
                         grouped.value.filter { it.ingredientId != null }
@@ -55,6 +60,7 @@ abstract class MealIngredientDao {
     protected data class MealIngredientJoin(
         val mealId: Int,
         val mealName: String,
+        val mealIsArchived: Boolean,
         val ingredientId: Int?,
         val ingredientName: String?,
         val ingredientUnits: Int?
