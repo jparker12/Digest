@@ -10,7 +10,16 @@
         android:id="@+id/rv_meals"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/meal_item" />
+        tools:listitem="@layout/meal_item"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/my_meals_empty_text"
+        android:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_meal"
@@ -19,6 +28,6 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_add"
         app:layout_anchor="@+id/rv_meals"
-        app:layout_anchorGravity="bottom|end"/>
+        app:layout_anchorGravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -43,6 +44,7 @@ class MealsFragment : Fragment() {
 
         val view = requireView()
 
+        val tvEmpty: TextView = view.findViewById(R.id.tv_empty)
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_meals)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         mealsAdapter = MealsAdapter(
@@ -53,6 +55,7 @@ class MealsFragment : Fragment() {
                 viewModel.onEditMealClick(findNavController(), mealWithIngredients, cvMeal)
             }
         )
+        recyclerView.setHasFixedSize(true)
         recyclerView.adapter = mealsAdapter
 
         val fabAddMeal: FloatingActionButton = view.findViewById(R.id.fab_add_meal)
@@ -88,6 +91,13 @@ class MealsFragment : Fragment() {
 
         // Observe changes in MealWithIngredients list
         viewModel.allMeals.observe(viewLifecycleOwner, Observer { allMeals ->
+            if (allMeals.isEmpty()) {
+                tvEmpty.visibility = View.VISIBLE
+                recyclerView.visibility = View.INVISIBLE
+            } else {
+                tvEmpty.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
             mealsAdapter.submitList(allMeals)
         })
         viewModel.archivedMeal.observe(viewLifecycleOwner, Observer { mealWithIngredients ->
