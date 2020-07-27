@@ -27,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add"
-        app:layout_anchor="@+id/rv_meals"
-        app:layout_anchorGravity="bottom|end" />
+        android:layout_gravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

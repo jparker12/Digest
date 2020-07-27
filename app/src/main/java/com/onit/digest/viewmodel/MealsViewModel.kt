@@ -11,8 +11,7 @@ import com.onit.digest.R
 import com.onit.digest.model.DatabaseHelper
 import com.onit.digest.model.MealRepository
 import com.onit.digest.model.MealWithIngredients
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MealsViewModel(
     application: Application,

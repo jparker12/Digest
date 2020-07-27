@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.onit.digest.buildDigestDatabase
-import com.onit.digest.executeSql
+import com.onit.digest.TestUtil.buildDigestDatabase
+import com.onit.digest.TestUtil.executeSql
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.*

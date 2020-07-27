@@ -1,11 +1,10 @@
 package com.onit.digest.model
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Transformations
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.onit.digest.buildDigestDatabase
-import com.onit.digest.executeSql
+import com.onit.digest.TestUtil.buildDigestDatabase
+import com.onit.digest.TestUtil.executeSql
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
