@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.onit.digest.R
 import com.onit.digest.model.MealRepository
+import com.onit.digest.model.MealRepository.EditIngredientWithExtra
+import com.onit.digest.model.MealRepository.RepoSaveMealResult
 import com.onit.digest.model.MealWithIngredients
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -24,11 +26,6 @@ class EditMealViewModel(
             return EditMealViewModel(application, selectedMeal, repository) as T
         }
     }
-
-    data class EditIngredientWithExtra(
-        var ingredientName: String = "",
-        var quantity: Int? = null
-    )
 
     val actionBarTitle =
         if (selectedMeal == null) getString(R.string.new_meal)
@@ -67,38 +64,14 @@ class EditMealViewModel(
     }
 
     fun onSaveMealClick() {
-        val mealNameStr = _mealName.value?.trim()
-        // Validate meal name is not blank
-        if (mealNameStr.isNullOrBlank()) {
-            onSaveError(R.string.error_meal_name_blank)
-            return
-        }
-        // Validate at least one ingredient
-        if (editIngredients.isEmpty()) {
-            onSaveError(R.string.error_zero_ingredients)
-            return
-        }
-        val editIngredientMap = mutableMapOf<String, EditIngredientWithExtra>()
-        for (editIngredient in editIngredients) {
-            // Validate ingredient name is not blank
-            if (editIngredient.ingredientName.isBlank()) {
-                onSaveError(R.string.error_ingredient_name_blank)
-                return
-            }
-            editIngredient.ingredientName = editIngredient.ingredientName.trim()
-            // Validate unique ingredient names
-            if (editIngredientMap.put(editIngredient.ingredientName, editIngredient) != null) {
-                onSaveError(R.string.error_duplicate_ingredients)
-                return
-            }
-        }
+        val mealNameStr = _mealName.value
         val startTime = System.currentTimeMillis()
         _isLoading.value = true
         viewModelScope.launch {
             val result = if (selectedMeal == null) {
-                repository.addMealWithIngredients(mealNameStr, editIngredientMap)
+                repository.addMealWithIngredients(mealNameStr, editIngredients)
             } else {
-                repository.editMealWithIngredients(selectedMeal, mealNameStr, editIngredientMap)
+                repository.editMealWithIngredients(selectedMeal, mealNameStr, editIngredients)
             }
             // Introduce artificial delay if necessary (helps user understand their action)
             val delayMs = 350 - (System.currentTimeMillis() - startTime)
@@ -106,8 +79,12 @@ class EditMealViewModel(
                 delay(delayMs)
             }
             when (result) {
-                is MealRepository.SaveMealResult.Success -> onSaveSuccess()
-                is MealRepository.SaveMealResult.MealDuplicate -> onSaveError(R.string.error_meal_name_duplicate)
+                is RepoSaveMealResult.Success -> onSaveSuccess()
+                is RepoSaveMealResult.EmptyMealName -> onSaveError(R.string.error_meal_name_blank)
+                is RepoSaveMealResult.EmptyIngredientList -> onSaveError(R.string.error_zero_ingredients)
+                is RepoSaveMealResult.EmptyIngredientName -> onSaveError(R.string.error_ingredient_name_blank)
+                is RepoSaveMealResult.IngredientDuplicate -> onSaveError(R.string.error_duplicate_ingredients)
+                is RepoSaveMealResult.MealDuplicate -> onSaveError(R.string.error_meal_name_duplicate)
             }
         }
     }

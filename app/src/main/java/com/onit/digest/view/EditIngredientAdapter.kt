@@ -12,10 +12,10 @@ import android.widget.ImageButton
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.R
-import com.onit.digest.viewmodel.EditMealViewModel
+import com.onit.digest.model.MealRepository
 
 class EditIngredientAdapter(
-    private val editIngredients: MutableList<EditMealViewModel.EditIngredientWithExtra>,
+    private val editIngredients: MutableList<MealRepository.EditIngredientWithExtra>,
     private val allIngredients: Array<String>
 ) :
     RecyclerView.Adapter<EditIngredientAdapter.ViewHolder>() {
@@ -76,7 +76,7 @@ class EditIngredientAdapter(
     override fun getItemCount(): Int = editIngredients.size
 
     fun onAddIngredientClick() {
-        editIngredients.add(EditMealViewModel.EditIngredientWithExtra())
+        editIngredients.add(MealRepository.EditIngredientWithExtra())
         isIngredientAdded = true
         notifyItemInserted(editIngredients.size - 1)
     }

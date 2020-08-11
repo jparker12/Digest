@@ -2,7 +2,7 @@ package com.onit.digest
 
 import android.app.Application
 import com.onit.digest.model.MealRepository
-import com.onit.digest.model.storage.DatabaseHelper
+import com.onit.digest.model.storage.DbMealStore
 import com.onit.digest.model.storage.DigestDatabase
 
 class DigestApplication: Application() {
@@ -23,7 +23,7 @@ class DigestApplication: Application() {
 
     fun getMealRepository(): MealRepository {
         if (!this::mealRepository.isInitialized) {
-            mealRepository = MealRepository(DatabaseHelper(getDigestDatabase()))
+            mealRepository = MealRepository(DbMealStore(getDigestDatabase()))
         }
         return mealRepository
     }
