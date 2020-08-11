@@ -3,7 +3,7 @@ package com.onit.digest.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.onit.digest.R
-import com.onit.digest.model.DatabaseHelper
+import com.onit.digest.model.storage.DatabaseHelper
 import com.onit.digest.model.MealRepository
 import com.onit.digest.model.MealWithIngredients
 import kotlinx.coroutines.delay
@@ -12,13 +12,21 @@ import kotlinx.coroutines.launch
 class EditMealViewModel(
     application: Application,
     private val selectedMeal: MealWithIngredients?,
-    private val repository: MealRepository = MealRepository(DatabaseHelper(application))
+    private val repository: MealRepository = MealRepository(
+        DatabaseHelper(
+            application
+        )
+    )
 ) : AndroidViewModel(application) {
 
     class Factory(
         private val application: Application,
         private val selectedMeal: MealWithIngredients?,
-        private val repository: MealRepository = MealRepository(DatabaseHelper(application))
+        private val repository: MealRepository = MealRepository(
+            DatabaseHelper(
+                application
+            )
+        )
     ) : ViewModelProvider.AndroidViewModelFactory(application) {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

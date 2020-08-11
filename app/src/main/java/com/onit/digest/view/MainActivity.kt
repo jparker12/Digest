@@ -1,4 +1,4 @@
-package com.onit.digest
+package com.onit.digest.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,6 +15,7 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.onit.digest.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

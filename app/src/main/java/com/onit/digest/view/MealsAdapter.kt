@@ -1,4 +1,4 @@
-package com.onit.digest
+package com.onit.digest.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +11,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.onit.digest.R
 import com.onit.digest.model.MealWithIngredients
 
 class MealsAdapter(
     private val onMealExpandToggle: (mealWithIngredients: MealWithIngredients) -> Unit,
     private val onEditMealClick: (mealWithIngredients: MealWithIngredients, cvMeal: CardView) -> Unit
 ) :
-    ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(DiffCallback()) {
+    ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(
+        DiffCallback()
+    ) {
 
     private var expandedMealIds = emptySet<Int>()
 

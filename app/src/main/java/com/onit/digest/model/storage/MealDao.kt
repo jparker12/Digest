@@ -1,4 +1,4 @@
-package com.onit.digest.model
+package com.onit.digest.model.storage
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

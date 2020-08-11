@@ -1,4 +1,4 @@
-package com.onit.digest.model
+package com.onit.digest.model.storage
 
 import android.database.sqlite.SQLiteConstraintException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -9,6 +9,7 @@ import com.onit.digest.TestUtil.executeSql
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matchers.isIn
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThat
@@ -16,7 +17,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.hamcrest.Matchers.*
 
 @RunWith(AndroidJUnit4::class)
 class IngredientDaoTest {
@@ -50,18 +50,36 @@ class IngredientDaoTest {
         prepopulateDatabase()
         ingredientDao.getAllIngredients().observeForever {
             assertEquals(4, it.size)
-            assertEquals(IngredientEntity(1, "Pasta"), it[0])
-            assertEquals(IngredientEntity(2, "Bolognese Sauce"), it[1])
-            assertEquals(IngredientEntity(3, "Rice"), it[2])
-            assertEquals(IngredientEntity(4, "Green Thai Curry Sauce"), it[3])
+            assertEquals(
+                IngredientEntity(
+                    1,
+                    "Pasta"
+                ), it[0])
+            assertEquals(
+                IngredientEntity(
+                    2,
+                    "Bolognese Sauce"
+                ), it[1])
+            assertEquals(
+                IngredientEntity(
+                    3,
+                    "Rice"
+                ), it[2])
+            assertEquals(
+                IngredientEntity(
+                    4,
+                    "Green Thai Curry Sauce"
+                ), it[3])
         }
     }
 
     @Test
     fun getIngredientsWithNameIgnoreCase() = runBlockingTest {
         prepopulateDatabase()
-        val expectedPasta = IngredientEntity(1, "Pasta")
-        val expectedRice = IngredientEntity(3, "Rice")
+        val expectedPasta =
+            IngredientEntity(1, "Pasta")
+        val expectedRice =
+            IngredientEntity(3, "Rice")
 
         var actualList = ingredientDao.getIngredientsWithNameIgnoreCase("Pasta", "Rice")
         assertThat(expectedPasta, isIn(actualList))
@@ -74,23 +92,36 @@ class IngredientDaoTest {
 
     @Test
     fun insertIngredient() = runBlockingTest {
-        ingredientDao.insertIngredient(IngredientEntity(name = "Broccoli"))
+        ingredientDao.insertIngredient(
+            IngredientEntity(
+                name = "Broccoli"
+            )
+        )
         ingredientDao.getAllIngredients().observeForever {
             assertEquals(1, it.size)
-            assertEquals(IngredientEntity(1, "Broccoli"), it[0])
+            assertEquals(
+                IngredientEntity(
+                    1,
+                    "Broccoli"
+                ), it[0])
         }
     }
 
     @Test(expected = SQLiteConstraintException::class)
     fun insertIngredientNameUnique() = runBlockingTest {
         prepopulateDatabase()
-        ingredientDao.insertIngredient(IngredientEntity(name = "Pasta"))
+        ingredientDao.insertIngredient(
+            IngredientEntity(
+                name = "Pasta"
+            )
+        )
     }
 
     @Test
     fun updateIngredient() = runBlockingTest {
         prepopulateDatabase()
-        val ingredient = IngredientEntity(1, "Spaghetti")
+        val ingredient =
+            IngredientEntity(1, "Spaghetti")
         ingredientDao.updateIngredients(ingredient)
         ingredientDao.getAllIngredients().observeForever {
             assertEquals(ingredient, it[0])
@@ -100,7 +131,8 @@ class IngredientDaoTest {
     @Test
     fun deleteIngredient() = runBlockingTest {
         prepopulateDatabase()
-        val ingredient = IngredientEntity(1, "Pasta")
+        val ingredient =
+            IngredientEntity(1, "Pasta")
         ingredientDao.deleteIngredients(ingredient.id)
         ingredientDao.getAllIngredients().observeForever {
             assertThat(it, not(hasItem(ingredient)))

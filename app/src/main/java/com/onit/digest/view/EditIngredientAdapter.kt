@@ -1,4 +1,4 @@
-package com.onit.digest
+package com.onit.digest.view
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
+import com.onit.digest.R
 import com.onit.digest.viewmodel.EditMealViewModel
 
 class EditIngredientAdapter(

@@ -1,4 +1,4 @@
-package com.onit.digest.model
+package com.onit.digest.model.storage
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

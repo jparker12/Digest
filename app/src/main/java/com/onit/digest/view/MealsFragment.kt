@@ -1,4 +1,4 @@
-package com.onit.digest
+package com.onit.digest.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.onit.digest.R
 import com.onit.digest.viewmodel.MealsViewModel
 
 /**
@@ -103,7 +104,8 @@ class MealsFragment : Fragment() {
         viewModel.archivedMeal.observe(viewLifecycleOwner, Observer { mealWithIngredients ->
             if (mealWithIngredients != null) {
                 viewModel.onSnackbarShown()
-                Snackbar.make(view, R.string.meal_deleted, Snackbar.LENGTH_LONG)
+                Snackbar.make(view,
+                    R.string.meal_deleted, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {
                         viewModel.onArchivedMealUndo(mealWithIngredients)
                     }

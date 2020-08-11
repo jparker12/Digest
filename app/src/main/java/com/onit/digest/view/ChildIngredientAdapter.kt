@@ -1,4 +1,4 @@
-package com.onit.digest
+package com.onit.digest.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.onit.digest.R
 import com.onit.digest.model.IngredientWithExtra
 
 class ChildIngredientAdapter :
-    ListAdapter<IngredientWithExtra, ChildIngredientAdapter.ViewHolder>(DiffCallback()) {
+    ListAdapter<IngredientWithExtra, ChildIngredientAdapter.ViewHolder>(
+        DiffCallback()
+    ) {
 
     class DiffCallback : DiffUtil.ItemCallback<IngredientWithExtra>() {
         override fun areItemsTheSame(
@@ -33,7 +36,9 @@ class ChildIngredientAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.child_ingredient_item, parent, false)
-        return ViewHolder(itemView)
+        return ViewHolder(
+            itemView
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

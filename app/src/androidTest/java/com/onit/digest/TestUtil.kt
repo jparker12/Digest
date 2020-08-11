@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -20,7 +19,7 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
-import com.onit.digest.model.DigestDatabase
+import com.onit.digest.model.storage.DigestDatabase
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf

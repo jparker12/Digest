@@ -1,4 +1,4 @@
-package com.onit.digest.model
+package com.onit.digest.model.storage
 
 import android.os.Parcelable
 import androidx.room.*
@@ -20,15 +20,3 @@ data class MealIngredientEntity(
     @ColumnInfo(name = "units")
     val units: Int? = null
 )
-
-@Parcelize
-data class IngredientWithExtra(
-    val ingredient: IngredientEntity,
-    val units: Int? = null
-) : Parcelable
-
-@Parcelize
-data class MealWithIngredients(
-    val meal: MealEntity,
-    val ingredients: List<IngredientWithExtra>
-) : Parcelable

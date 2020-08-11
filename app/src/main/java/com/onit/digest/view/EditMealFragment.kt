@@ -1,4 +1,4 @@
-package com.onit.digest
+package com.onit.digest.view
 
 import android.content.Context
 import android.os.Bundle
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import com.google.android.material.snackbar.Snackbar
+import com.onit.digest.R
 import com.onit.digest.viewmodel.EditMealViewModel
 
 /**
@@ -97,7 +98,10 @@ class EditMealFragment : Fragment() {
                 viewModel.allIngredientsName.removeObserver(this)
                 // Setup adapter
                 val adapter =
-                    EditIngredientAdapter(viewModel.editIngredients, ingredientNames.toTypedArray())
+                    EditIngredientAdapter(
+                        viewModel.editIngredients,
+                        ingredientNames.toTypedArray()
+                    )
                 recyclerView.adapter = adapter
                 bnAddIngredient.setOnClickListener {
                     adapter.onAddIngredientClick()

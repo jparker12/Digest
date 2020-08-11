@@ -1,4 +1,4 @@
-package com.onit.digest.ui
+package com.onit.digest.view
 
 import android.widget.Button
 import android.widget.TextView
@@ -14,7 +14,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.google.android.material.snackbar.Snackbar
-import com.onit.digest.MealsFragment
 import com.onit.digest.R
 import com.onit.digest.TestUtil
 import com.onit.digest.TestUtil.ViewVisibility

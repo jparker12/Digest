@@ -1,8 +1,10 @@
-package com.onit.digest.model
+package com.onit.digest.model.storage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.room.*
+import com.onit.digest.model.IngredientWithExtra
+import com.onit.digest.model.MealWithIngredients
 
 @Dao
 abstract class MealIngredientDao {
@@ -43,15 +45,24 @@ abstract class MealIngredientDao {
                     val mealName = grouped.value.first().mealName
                     val mealIsArchived = grouped.value.first().mealIsArchived
                     MealWithIngredients(
-                        MealEntity(mealId, mealName, mealIsArchived),
+                        MealEntity(
+                            mealId,
+                            mealName,
+                            mealIsArchived
+                        ),
                         // Map items to IngredientWithExtras
                         // Make sure to only take if the ingredientId is not null.
                         // This will happen if there is a meal with no ingredients (UI should prevent this case)
                         grouped.value.filter { it.ingredientId != null }
-                            .map { IngredientWithExtra(
-                                IngredientEntity(it.ingredientId!!, it.ingredientName!!),
-                                it.ingredientUnits
-                            ) }
+                            .map {
+                                IngredientWithExtra(
+                                    IngredientEntity(
+                                        it.ingredientId!!,
+                                        it.ingredientName!!
+                                    ),
+                                    it.ingredientUnits
+                                )
+                            }
                     )
                 }
         }

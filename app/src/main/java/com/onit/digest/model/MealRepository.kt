@@ -1,6 +1,7 @@
 package com.onit.digest.model
 
 import androidx.lifecycle.Transformations
+import com.onit.digest.model.storage.*
 import com.onit.digest.viewmodel.EditMealViewModel
 import java.util.*
 
@@ -36,7 +37,11 @@ class MealRepository(private val dbHelper: DatabaseHelper) {
             val dbIngredients = insertIngredientsDb(editIngredients)
 
             // Insert the Meal into the DB
-            val mealId = dbHelper.mealDao.insertMeal(MealEntity(name = mealName)).toInt()
+            val mealId = dbHelper.mealDao.insertMeal(
+                MealEntity(
+                    name = mealName
+                )
+            ).toInt()
 
             // Insert joins for the ingredients
             insertMealIngredientJoins(mealId, editIngredients, dbIngredients)
@@ -62,7 +67,12 @@ class MealRepository(private val dbHelper: DatabaseHelper) {
 
             // Only update the Meal in DB if the name has changed
             if (editMealName != selectedMeal.meal.name) {
-                dbHelper.mealDao.updateMeal(MealEntity(selectedMeal.meal.id, editMealName))
+                dbHelper.mealDao.updateMeal(
+                    MealEntity(
+                        selectedMeal.meal.id,
+                        editMealName
+                    )
+                )
             }
 
             // Remove existing ingredient joins for this Meal ID
@@ -92,7 +102,12 @@ class MealRepository(private val dbHelper: DatabaseHelper) {
         for (ingredientEntity in newIngredients) {
             val ingredientId = dbHelper.ingredientDao.insertIngredient(ingredientEntity).toInt()
             // Put the newly inserted ingredient into our list of database ingredients (with it's new ID)
-            dbIngredients.add(IngredientEntity(ingredientId, ingredientEntity.name))
+            dbIngredients.add(
+                IngredientEntity(
+                    ingredientId,
+                    ingredientEntity.name
+                )
+            )
         }
 
         return dbIngredients

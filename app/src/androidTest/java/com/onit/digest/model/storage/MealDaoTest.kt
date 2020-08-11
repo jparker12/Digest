@@ -1,4 +1,4 @@
-package com.onit.digest.model
+package com.onit.digest.model.storage
 
 import android.database.sqlite.SQLiteConstraintException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -7,13 +7,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.onit.digest.TestUtil.buildDigestDatabase
 import com.onit.digest.TestUtil.executeSql
 import kotlinx.coroutines.test.runBlockingTest
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.isIn
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.hamcrest.Matchers.*
 
 @RunWith(AndroidJUnit4::class)
 class MealDaoTest {
@@ -47,15 +48,26 @@ class MealDaoTest {
         prepopulateDatabase()
         mealDao.getAllMeals().observeForever {
             assertThat(it.size, `is`(2))
-            assertThat(it[0], `is`(MealEntity(1, "Pasta Bolognese")))
-            assertThat(it[1], `is`(MealEntity(2, "Thai Curry")))
+            assertThat(it[0], `is`(
+                MealEntity(
+                    1,
+                    "Pasta Bolognese"
+                )
+            ))
+            assertThat(it[1], `is`(
+                MealEntity(
+                    2,
+                    "Thai Curry"
+                )
+            ))
         }
     }
 
     @Test
     fun getMealWithNameIgnoreCase() = runBlockingTest {
         prepopulateDatabase()
-        val expectedMeal = MealEntity(1, "Pasta Bolognese")
+        val expectedMeal =
+            MealEntity(1, "Pasta Bolognese")
         var actualMeal = mealDao.getMealWithNameIgnoreCase("Pasta Bolognese")
         assertThat(actualMeal, `is`(expectedMeal))
         actualMeal = mealDao.getMealWithNameIgnoreCase("pasta bolognese")
@@ -67,7 +79,12 @@ class MealDaoTest {
         val id = mealDao.insertMeal(MealEntity(name = "Test Meal"))
         mealDao.getAllMeals().observeForever {
             assertThat(it.size, `is`(1))
-            assertThat(it[0], `is`(MealEntity(id.toInt(), "Test Meal")))
+            assertThat(it[0], `is`(
+                MealEntity(
+                    id.toInt(),
+                    "Test Meal"
+                )
+            ))
         }
     }
 
@@ -81,7 +98,8 @@ class MealDaoTest {
     fun updateMeal() = runBlockingTest {
         prepopulateDatabase()
 
-        val updatedMeal = MealEntity(2, "Green Thai Curry")
+        val updatedMeal =
+            MealEntity(2, "Green Thai Curry")
         mealDao.updateMeal(updatedMeal)
         mealDao.getAllMeals().observeForever {
             assertEquals(updatedMeal, it[1])
@@ -92,7 +110,8 @@ class MealDaoTest {
     fun updateMealArchive() = runBlockingTest {
         prepopulateDatabase()
 
-        val updatedMeal = MealEntity(2, "Thai Curry", true)
+        val updatedMeal =
+            MealEntity(2, "Thai Curry", true)
         mealDao.updateMeal(updatedMeal)
         mealDao.getAllMeals().observeForever {
             var inList = false
@@ -109,7 +128,8 @@ class MealDaoTest {
     fun updateMealNotArchive() = runBlockingTest {
         prepopulateDatabase()
 
-        val updatedMeal = MealEntity(3, "Archived Meal", false)
+        val updatedMeal =
+            MealEntity(3, "Archived Meal", false)
         mealDao.updateMeal(updatedMeal)
         mealDao.getAllMeals().observeForever {
             assertThat(updatedMeal, isIn(it))
@@ -122,7 +142,11 @@ class MealDaoTest {
         mealDao.deleteMeal(1)
         mealDao.getAllMeals().observeForever {
             assertEquals(1, it.size)
-            assertEquals(MealEntity(2, "Thai Curry"), it[0])
+            assertEquals(
+                MealEntity(
+                    2,
+                    "Thai Curry"
+                ), it[0])
         }
     }
 
