@@ -6,29 +6,21 @@ import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.navOptions
-import com.onit.digest.view.MealsFragmentDirections
 import com.onit.digest.R
-import com.onit.digest.model.storage.DatabaseHelper
 import com.onit.digest.model.MealRepository
 import com.onit.digest.model.MealWithIngredients
-import kotlinx.coroutines.*
+import com.onit.digest.view.MealsFragmentDirections
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MealsViewModel(
     application: Application,
-    private val repository: MealRepository = MealRepository(
-        DatabaseHelper(
-            application
-        )
-    )
+    private val repository: MealRepository
 ) : AndroidViewModel(application) {
 
     class Factory(
         private val application: Application,
-        private val repository: MealRepository = MealRepository(
-            DatabaseHelper(
-                application
-            )
-        )
+        private val repository: MealRepository
     ) : ViewModelProvider.AndroidViewModelFactory(application) {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

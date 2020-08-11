@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.onit.digest.DigestApplication
 import com.onit.digest.R
 import com.onit.digest.viewmodel.MealsViewModel
 
@@ -38,9 +39,12 @@ class MealsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        val activity = requireActivity()
+        val application = activity.application as DigestApplication
+
         viewModel = ViewModelProvider(
-            requireActivity(),
-            MealsViewModel.Factory(requireActivity().application)
+            activity,
+            MealsViewModel.Factory(application, application.getMealRepository())
         ).get(MealsViewModel::class.java)
 
         val view = requireView()

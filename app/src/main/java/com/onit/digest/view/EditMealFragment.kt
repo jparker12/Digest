@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import com.google.android.material.snackbar.Snackbar
+import com.onit.digest.DigestApplication
 import com.onit.digest.R
 import com.onit.digest.viewmodel.EditMealViewModel
 
@@ -50,15 +51,18 @@ class EditMealFragment : Fragment() {
 
         val safeArgs: EditMealFragmentArgs by navArgs()
 
+        val activity = requireActivity() as AppCompatActivity
+        val application = activity.application as DigestApplication
+
         viewModel = ViewModelProvider(
             this,
-            EditMealViewModel.Factory(requireActivity().application, safeArgs.selectedMeal)
+            EditMealViewModel.Factory(application, safeArgs.selectedMeal, application.getMealRepository())
         ).get(EditMealViewModel::class.java)
 
         val view = requireView()
 
         // Set action bar title
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = viewModel.actionBarTitle
+        activity.supportActionBar?.title = viewModel.actionBarTitle
 
         etMealName = view.findViewById(R.id.et_meal_name)
         etMealName.addTextChangedListener(onTextChanged = { text, _, _, _ ->

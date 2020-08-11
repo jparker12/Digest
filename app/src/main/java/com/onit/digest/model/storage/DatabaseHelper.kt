@@ -1,12 +1,9 @@
 package com.onit.digest.model.storage
 
-import android.app.Application
 import androidx.room.withTransaction
 
-class DatabaseHelper(application: Application) {
+class DatabaseHelper(private val digestDb: DigestDatabase) {
 
-    private val digestDb =
-        DigestDatabase.getDatabase(application)
     val mealDao = digestDb.mealDao()
     val ingredientDao = digestDb.ingredientDao()
     val mealIngredientDao = digestDb.mealIngredientDao()

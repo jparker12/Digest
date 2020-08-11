@@ -3,6 +3,7 @@
     package="com.onit.digest">
 
     <application
+        android:name=".DigestApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

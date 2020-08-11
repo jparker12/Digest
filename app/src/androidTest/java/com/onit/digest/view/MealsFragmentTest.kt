@@ -6,6 +6,7 @@ import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.*
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -14,13 +15,16 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.google.android.material.snackbar.Snackbar
+import com.onit.digest.DigestApplication
 import com.onit.digest.R
 import com.onit.digest.TestUtil
 import com.onit.digest.TestUtil.ViewVisibility
 import com.onit.digest.TestUtil.atPosition
+import com.onit.digest.TestUtil.buildDigestDatabase
 import com.onit.digest.TestUtil.clickChildViewWithId
 import com.onit.digest.TestUtil.waitViewVisibility
 import com.onit.digest.model.MealWithIngredients
+import com.onit.digest.model.storage.DigestDatabase
 import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Test
@@ -33,13 +37,27 @@ import org.mockito.Mockito
 @LargeTest
 class MealsFragmentTest {
 
-    // TODO: Currently using real DB. Should inject fake DB
+    // TODO: refactor project to use dagger
 
     private val navController = Mockito.mock(NavController::class.java)
     private lateinit var mealsScenario: FragmentScenario<MealsFragment>
 
+    private fun prepopulateDatabase(digestDb: DigestDatabase) {
+        TestUtil.executeSql(
+            digestDb,
+            "INSERT INTO meal (id,name,is_archived) values (1,'Pasta Bolognese',0), (2,'Thai Curry',0), (3, 'Bangers & Mash',0)",
+            "INSERT INTO ingredient (id,name) values (1,'Pasta'), (2,'Bolognese Sauce'), (3,'Rice'), (4,'Green Thai Curry Sauce'), (5,'Bell Pepper')",
+            "INSERT INTO meal_ingredient (meal_id,ingredient_id,units) values (1,1,null),(1,2,null),(1,5,1),(2,3,null),(2,4,null),(2,5,2)"
+        )
+    }
+
     @Before
     fun setup() {
+        val application = ApplicationProvider.getApplicationContext<DigestApplication>()
+        val digestDb = buildDigestDatabase(application)
+        prepopulateDatabase(digestDb)
+        application.setDigestDatabase(digestDb)
+
         mealsScenario = launchFragmentInContainer<MealsFragment>(themeResId = R.style.AppTheme)
         mealsScenario.onFragment {
             Navigation.setViewNavController(it.requireView(), navController)
@@ -133,12 +151,12 @@ class MealsFragmentTest {
                     waitViewVisibility(withId(R.id.layout_expandable), ViewVisibility.VISIBLE, 2000)
                 )
             ).check(
-                // Check position 3  of ingredients recycler view within position 0 of meals recycler view
+                // Check position 2  of ingredients recycler view within position 0 of meals recycler view
                 matches(atPosition(
                     0,
                     hasDescendant(
                         allOf(withId(R.id.rv_ingredients), atPosition(
-                            3,
+                            2,
                             allOf(
                                 hasDescendant(allOf(withId(R.id.tv_ingredient), withText("Bell Pepper"))),
                                 hasDescendant(allOf(withId(R.id.tv_units), withText("1")))
