@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.R
 import com.onit.digest.model.IngredientWithExtra
 
+/**
+ * Adapter class for displaying a list of a meal's ingredients
+ */
 class ChildIngredientAdapter :
     ListAdapter<IngredientWithExtra, ChildIngredientAdapter.ViewHolder>(
         DiffCallback()

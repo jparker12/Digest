@@ -9,6 +9,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+/**
+ * [RoomDatabase] containing persisted data for the app
+ */
 @Database(
     version = 1,
     entities = [IngredientEntity::class, MealEntity::class, MealIngredientEntity::class]
@@ -39,6 +42,8 @@ abstract class DigestDatabase : RoomDatabase() {
                         super.onCreate(db)
                         INSTANCE?.let { roomDb ->
                             GlobalScope.launch {
+                                // On creation of database, insert some dummy data
+                                // TODO: remove this later, or only add in debug builds
                                 val mealDao = roomDb.mealDao()
                                 val ingredientDao = roomDb.ingredientDao()
                                 val mealIngredientDao = roomDb.mealIngredientDao()

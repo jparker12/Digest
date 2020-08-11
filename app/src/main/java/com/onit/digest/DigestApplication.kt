@@ -5,6 +5,10 @@ import com.onit.digest.model.MealRepository
 import com.onit.digest.model.storage.DbMealStore
 import com.onit.digest.model.storage.DigestDatabase
 
+/**
+ * Custom Application class used for accessing dependencies (and setting dependencies for testing)
+ * // TODO: move to Dagger as project grows
+ */
 class DigestApplication: Application() {
 
     private lateinit var digestDb: DigestDatabase

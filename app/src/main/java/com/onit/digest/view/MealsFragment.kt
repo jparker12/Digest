@@ -21,7 +21,7 @@ import com.onit.digest.R
 import com.onit.digest.viewmodel.MealsViewModel
 
 /**
- * A simple [Fragment] subclass.
+ * [Fragment] for displaying/deleting a user's currently stored meals.
  */
 class MealsFragment : Fragment() {
 
@@ -50,6 +50,8 @@ class MealsFragment : Fragment() {
         val view = requireView()
 
         val tvEmpty: TextView = view.findViewById(R.id.tv_empty)
+
+        // Setup recycler view
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_meals)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         mealsAdapter = MealsAdapter(
@@ -79,6 +81,7 @@ class MealsFragment : Fragment() {
             }
         })
 
+        // Setup ItemTouchHelper to allow swipe-to-delete functionality
         ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -90,6 +93,7 @@ class MealsFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val mealWithIngredients =
                     mealsAdapter.getMealWithIngredients(viewHolder.adapterPosition)
+                // Archive the meal
                 viewModel.onMealArchive(mealWithIngredients)
             }
         }).attachToRecyclerView(recyclerView)
@@ -105,9 +109,14 @@ class MealsFragment : Fragment() {
             }
             mealsAdapter.submitList(allMeals)
         })
+
+        // Observe when a meal has been archived by the user (swiped left or right)
         viewModel.archivedMeal.observe(viewLifecycleOwner, Observer { mealWithIngredients ->
-            if (mealWithIngredients != null) {
+            mealWithIngredients?.let {
                 viewModel.onSnackbarShown()
+                // Show a snackbar with an 'UNDO' button saying the meal has been deleted.
+                // If the user clicks 'UNDO' the meal will be unarchived, if the snackbar
+                // is dismissed then delete the meal
                 Snackbar.make(view,
                     R.string.meal_deleted, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo) {

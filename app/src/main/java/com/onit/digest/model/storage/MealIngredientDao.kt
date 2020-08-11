@@ -6,6 +6,10 @@ import androidx.room.*
 import com.onit.digest.model.IngredientWithExtra
 import com.onit.digest.model.MealWithIngredients
 
+/**
+ * Room DAO for the [MealIngredientEntity] table.
+ * Also constructs [MealWithIngredients] objects from the joins
+ */
 @Dao
 abstract class MealIngredientDao {
 

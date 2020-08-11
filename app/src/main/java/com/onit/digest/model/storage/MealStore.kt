@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import com.onit.digest.model.IngredientWithExtra
 import com.onit.digest.model.MealWithIngredients
 
+/**
+ * Interface for accessing Meal and Ingredient data from storage
+ */
 interface MealStore {
 
     fun getAllMealsWithIngredients(): LiveData<List<MealWithIngredients>>

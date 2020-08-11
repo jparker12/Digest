@@ -14,12 +14,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.R
 import com.onit.digest.model.MealRepository
 
+/**
+ * Adapter for displaying a list of editable ingredients for a meal.
+ */
 class EditIngredientAdapter(
+    /**
+     * Current ingredients of the meal
+     */
     private val editIngredients: MutableList<MealRepository.EditIngredientWithExtra>,
+    /**
+     * Names of all ingredients in storage (used for auto-complete)
+     */
     private val allIngredients: Array<String>
 ) :
     RecyclerView.Adapter<EditIngredientAdapter.ViewHolder>() {
 
+    /**
+     * True if a new ingredient has recently been added
+     */
     private var isIngredientAdded = false
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,6 +59,7 @@ class EditIngredientAdapter(
                     allIngredients
                 )
             )
+            // Listen for changes to ingredient name and units and update model
             actvName.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 editIngredients[adapterPosition].ingredientName = text?.toString() ?: ""
             })
@@ -66,8 +79,8 @@ class EditIngredientAdapter(
         val editIngredient = editIngredients[position]
         holder.actvName.setText(editIngredient.ingredientName)
         holder.etUnits.setText(editIngredient.quantity?.toString())
-        // Open keyboard for this newly added ingredient
         if (isIngredientAdded && position == itemCount - 1) {
+            // Open keyboard for this newly added ingredient
             isIngredientAdded = false
             toggleKeyboard(holder.actvName, true)
         }
@@ -75,12 +88,18 @@ class EditIngredientAdapter(
 
     override fun getItemCount(): Int = editIngredients.size
 
+    /**
+     * Adds a new empty ingredient to the list
+     */
     fun onAddIngredientClick() {
         editIngredients.add(MealRepository.EditIngredientWithExtra())
         isIngredientAdded = true
         notifyItemInserted(editIngredients.size - 1)
     }
 
+    /**
+     * Open/close the soft keyboard
+     */
     private fun toggleKeyboard(editText: EditText, open: Boolean) {
         val imm =
             editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

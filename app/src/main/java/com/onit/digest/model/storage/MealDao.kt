@@ -3,6 +3,9 @@ package com.onit.digest.model.storage
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
+/**
+ * Room DAO for the [MealEntity] table
+ */
 @Dao
 interface MealDao {
 

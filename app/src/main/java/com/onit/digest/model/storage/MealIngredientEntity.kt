@@ -1,9 +1,12 @@
 package com.onit.digest.model.storage
 
-import android.os.Parcelable
-import androidx.room.*
-import kotlinx.android.parcel.Parcelize
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
 
+/**
+ * Table and data class for the meal_ingredient join table
+ */
 @Entity(
     tableName = "meal_ingredient",
     primaryKeys = ["meal_id", "ingredient_id"],

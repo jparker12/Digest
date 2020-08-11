@@ -6,6 +6,9 @@ import com.onit.digest.model.MealWithIngredients
 import com.onit.digest.model.storage.MealStore.StoreSaveMealResult
 import java.util.*
 
+/**
+ * Provides access to Meal and Ingredient data from a [DigestDatabase]
+ */
 class DbMealStore(private val digestDb: DigestDatabase): MealStore {
 
     // Allows suspend functions to be called within a RoomDatabase.withTransaction block

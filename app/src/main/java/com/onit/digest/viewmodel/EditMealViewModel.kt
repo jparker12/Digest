@@ -10,8 +10,14 @@ import com.onit.digest.model.MealWithIngredients
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * [ViewModel] for a UI that allows a user to edit an existing meal or create a new one
+ */
 class EditMealViewModel(
     application: Application,
+    /**
+     * The meal to edit, or null if creating a new meal
+     */
     private val selectedMeal: MealWithIngredients?,
     private val repository: MealRepository
 ) : AndroidViewModel(application) {
@@ -44,25 +50,43 @@ class EditMealViewModel(
         get() = _snackbar
 
     private val _isFinished: MutableLiveData<Boolean> = MutableLiveData()
+    /**
+     * [LiveData] for when the user is finished or cancelled editing/creating a meal
+     */
     val isFinished: LiveData<Boolean>
         get() = _isFinished
 
+    /**
+     * A list of current ingredients for the meal
+     */
     val editIngredients =
         selectedMeal?.ingredients?.map {
             EditIngredientWithExtra(it.ingredient.name, it.units)
         }?.toMutableList() ?: mutableListOf()
 
+    /**
+     * A list of the names of all ingredients in storage
+     */
     val allIngredientsName =
         Transformations.map(repository.getAllIngredients()) { list -> list.map { it.name } }
 
+    /**
+     * To be called when the user changes the meal name
+     */
     fun onMealNameChanged(mealName: String) {
         _mealName.value = mealName
     }
 
+    /**
+     * To be called immediately after showing a snackbar
+     */
     fun onSnackbarShown() {
         _snackbar.value = null
     }
 
+    /**
+     * To be called when the user clicks to save their meal
+     */
     fun onSaveMealClick() {
         val mealNameStr = _mealName.value
         val startTime = System.currentTimeMillis()

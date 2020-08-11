@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.onit.digest.R
 import com.onit.digest.model.MealWithIngredients
 
+/**
+ * Adapter class for displaying a list of user's meals.
+ * Meals are displayed in [CardView] that can be expanded to reveal ingredients and an 'EDIT' button
+ */
 class MealsAdapter(
     private val onMealExpandToggle: (mealWithIngredients: MealWithIngredients) -> Unit,
     private val onEditMealClick: (mealWithIngredients: MealWithIngredients, cvMeal: CardView) -> Unit
-) :
-    ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(
-        DiffCallback()
-    ) {
+) : ListAdapter<MealWithIngredients, MealsAdapter.ViewHolder>(DiffCallback()) {
 
     private var expandedMealIds = emptySet<Int>()
 

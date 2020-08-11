@@ -18,6 +18,11 @@ import com.google.android.material.navigation.NavigationView
 import com.onit.digest.R
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * Main entry point of the app. Acts as a container for [MealsFragment] and [EditMealFragment]
+ * with navigation set in [R.navigation.navigation_main]
+ * Handles the action bar, bottom nav and drawer depending on orientation, screen size etc.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration

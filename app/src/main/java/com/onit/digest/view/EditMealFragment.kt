@@ -22,7 +22,7 @@ import com.onit.digest.R
 import com.onit.digest.viewmodel.EditMealViewModel
 
 /**
- * A simple [Fragment] subclass.
+ * [Fragment] for editing an existing meal with ingredients or creating a new one.
  */
 class EditMealFragment : Fragment() {
 
@@ -34,6 +34,7 @@ class EditMealFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Animate on entry
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
@@ -80,6 +81,7 @@ class EditMealFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(view.context)
         bnAddIngredient = view.findViewById(R.id.bn_add_ingredient)
 
+        // Observe snackbar text and display
         viewModel.snackbar.observe(viewLifecycleOwner, Observer { text ->
             text?.let {
                 Snackbar.make(requireView(), text, Snackbar.LENGTH_SHORT).show()
@@ -87,6 +89,7 @@ class EditMealFragment : Fragment() {
             }
         })
 
+        // Observe isFinished (when user has exited or saved a meal) and go back
         viewModel.isFinished.observe(viewLifecycleOwner, Observer { isFinished ->
             if (isFinished) {
                 findNavController().popBackStack()
@@ -124,6 +127,7 @@ class EditMealFragment : Fragment() {
             onSaveMealClick()
             return@setOnMenuItemClickListener true
         }
+        // Observe the isLoading state and update the UI accordingly
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
             menuItemSave.isEnabled = !isLoading
             if (isLoading) {

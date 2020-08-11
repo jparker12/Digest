@@ -4,6 +4,11 @@ import androidx.lifecycle.Transformations
 import com.onit.digest.model.storage.IngredientEntity
 import com.onit.digest.model.storage.MealStore
 
+/**
+ * Repository class for viewmodels to retrieve, update and save meals and ingredients
+ * from the given [MealStore].
+ * TODO: use an interface
+ */
 class MealRepository(private val mealStore: MealStore) {
 
     fun getAllMealsWithIngredients() =
@@ -21,6 +26,9 @@ class MealRepository(private val mealStore: MealStore) {
         mealStore.deleteMeal(mealWithIngredients.meal)
     }
 
+    /**
+     * Add a new meal with ingredients to storage
+     */
     suspend fun addMealWithIngredients(
         mealName: String?,
         editIngredients: List<EditIngredientWithExtra>
@@ -33,6 +41,9 @@ class MealRepository(private val mealStore: MealStore) {
         return transformStoreSaveMealResult(storeSaveMealResult)
     }
 
+    /**
+     * Edit an existing meal and it's ingredients in storage
+     */
     suspend fun editMealWithIngredients(
         selectedMeal: MealWithIngredients,
         editMealName: String?,
@@ -46,6 +57,9 @@ class MealRepository(private val mealStore: MealStore) {
         return transformStoreSaveMealResult(storeSaveMealResult)
     }
 
+    /**
+     * Transform a [MealStore.StoreSaveMealResult] to a [RepoSaveMealResult]
+     */
     private fun transformStoreSaveMealResult(storeSaveMealResult: MealStore.StoreSaveMealResult): RepoSaveMealResult {
         return when(storeSaveMealResult) {
             is MealStore.StoreSaveMealResult.Success -> RepoSaveMealResult.Success
@@ -53,6 +67,9 @@ class MealRepository(private val mealStore: MealStore) {
         }
     }
 
+    /**
+     * Validate a meal name and ingredients to ensure it is suitable to be saved in the [MealStore]
+     */
     private fun validateMealAndIngredients(mealName: String?, editIngredients: List<EditIngredientWithExtra>): RepoSaveMealResult? {
         if (mealName.isNullOrBlank()) {
             return RepoSaveMealResult.EmptyMealName
@@ -75,6 +92,9 @@ class MealRepository(private val mealStore: MealStore) {
         return null
     }
 
+    /**
+     * Data class to be used by views for displaying state of editable ingredients in UI
+     */
     data class EditIngredientWithExtra(
         var ingredientName: String = "",
         var quantity: Int? = null

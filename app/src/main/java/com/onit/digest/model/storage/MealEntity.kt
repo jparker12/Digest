@@ -7,6 +7,9 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Table and data class for the meal table
+ */
 @Parcelize
 @Entity(tableName = "meal", indices = [Index(value= ["name"], unique = true)])
 data class MealEntity(
